@@ -1,0 +1,1 @@
+&"c:\Program Files\PostgreSQL\16\bin\psql.exe" -f "C:\Users\emilia\tda357\task1\runsetup.sql" postgresql://postgres:postgres@127.0.0.1

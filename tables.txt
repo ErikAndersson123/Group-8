@@ -1,0 +1,30 @@
+CREATE TABLE Users(
+	username TEXT NOT NULL,
+	password TEXT NOT NULL,
+	PRIMARY KEY(username)
+);
+
+CREATE TABLE Messages(
+	senderID INT NOT NULL,
+	roomID INT NOT NULL,
+	timestamp TEXT NOT NULL,
+	text TEXT NOT NULL,
+	image TEXT NOT NULL,
+	PRIMARY KEY(senderID, roomID, timestamp),
+	FOREIGN KEY(senderID) REFERENCES Users(username),
+	FOREIGN KEY(roomID) REFERENCES Chatrooms(roomID)
+);
+
+CREATE TABLE Chatrooms(
+	roomID INT NOT NULL,
+	PRIMARY KEY(roomID)
+);
+
+CREATE TABLE ChatroomUsers(
+	userID TEXT NOT NULL
+	roomID INT NOT NULL
+	PRIMARY KEY(userID, roomID),
+	FOREIGN KEY(userID) REFERENCES Users(username)
+	FOREIGN KEY(roomID) REFERENCES Chatrooms
+);
+
