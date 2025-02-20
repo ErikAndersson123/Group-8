@@ -1,4 +1,5 @@
 package server;
+
 import java.sql.*; // JDBC stuff.
 import java.util.Properties;
 
@@ -14,10 +15,23 @@ public class PortalConnection {
 
     // This is the JDBC connection object you will be using in your methods.
     private Connection conn;
-
+    
+    /*
     public PortalConnection() throws SQLException, ClassNotFoundException {
-        this(DATABASE, USERNAME, PASSWORD);
+        this(DATABASE, USERNAME, PASSWORD);  
     }
+    */
+   
+    public PortalConnection() {
+        try {
+            this.conn = DriverManager.getConnection(DATABASE, USERNAME, PASSWORD);
+        } catch (SQLException e) {
+            throw new RuntimeException("Database connection failed: " + e.getMessage(), e);
+        }
+    }
+
+
+
     // Initializes the connection, no need to change anything here
     public PortalConnection(String db, String user, String pwd) throws SQLException, ClassNotFoundException {
         Class.forName("org.postgresql.Driver");
@@ -27,111 +41,104 @@ public class PortalConnection {
         conn = DriverManager.getConnection(db, props);
     }
 
+    public String registerUser(User user){
+    String sql = "INSERT INTO Users (username, password) VALUES (?, ?)";
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setString(1, user.getName());
+        stmt.setString(2, user.getPassword());
+        stmt.executeUpdate();
+        return "{\"success\":true}";
+      } catch (SQLException e) {
+          return "{\"success\":false, \"error\":\""+getError(e)+"\"}";
+      }     
+    }
 
-    // Register a user to our platform, returns a tiny JSON document (as a String)
-    public String register(String username, String password){
-      // Here's a bit of useful code, use it or delete it 
-    	try (PreparedStatement ps = conn.prepareStatement("INSERT INTO Users VALUES(?, ?");){
-    		ps.setString(1, username);
-    		ps.setString(2, password);
-    		ps.executeUpdate();
-    		return "{\"success\":true}";
-       } catch (SQLException e) {
+    public String unregisterUser(User user){
+    String sql = "DELETE FROM Users WHERE username = ?";
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setString(1, user.getName());
+        stmt.executeUpdate();
+        int rowsAffected = stmt.executeUpdate();
+        if (rowsAffected == 0) {
+            return "{\"success\":false, \"error\":\"User does not exist\"}";
+        }        
+        return "{\"success\":true}";
+      } catch (SQLException e) {
+          return "{\"success\":false, \"error\":\""+getError(e)+"\"}";
+      }
+    }
+    
+    public boolean authenticateUser(User user){
+        String sql = "SELECT * FROM Users WHERE username = ? AND password = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, user.getName());
+            stmt.setString(2, user.getPassword());
+            ResultSet rs = stmt.executeQuery();
+        
+            return rs.next();
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+    
+    public String registerChatroom(Chatroom chatroom){
+    String sql = "INSERT INTO Chatrooms (roomID) VALUES (?)";
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setInt(1, chatroom.getRoomID());
+        stmt.executeUpdate();
+        return "{\"success\":true}";
+      } catch (SQLException e) {
           return "{\"success\":false, \"error\":\""+getError(e)+"\"}";
       }     
     }
     
-    // Unregister a user from our platform, returns a tiny JSON document (as a String)
-    public String unregister(String username, String password){
-    	try(PreparedStatement ps = conn.prepareStatement("DELETE FROM Users WHERE username=? AND password=?");){
-    		ps.setString(1, username);
-    		ps.setString(2, password);
-    		int s = ps.executeUpdate();
-    		return s > 0 ? "{\"success\":true, "+s+" rows affected" : "{\"success\":false, \"error\":\"0 rows affected\"}";
-    	} catch (SQLException e) {
-    	      return "{\"success\":false, \"error\":\""+getError(e)+"\"}";
-
-    	}
+    public String unregisterChatroom(Chatroom chatroom){
+    String sql = "DELETE FROM Chatrooms WHERE roomID = ?";
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setInt(1, chatroom.getRoomID());
+        stmt.executeUpdate();
+        int rowsAffected = stmt.executeUpdate();
+        if (rowsAffected == 0) {
+            return "{\"success\":false, \"error\":\"Chatroom does not exist\"}";
+        }        
+        return "{\"success\":true}";
+      } catch (SQLException e) {
+          return "{\"success\":false, \"error\":\""+getError(e)+"\"}";
+      }
     }
-    public String updateUserInfo(String username, String password) {
-    	try(PreparedStatement ps = conn.prepareStatement("UPDATE Users SET password=? WHERE username=?");){
-    		ps.setString(1, username);
-    		ps.setString(2, password);
-    		int s = ps.executeUpdate();
-    		return s > 0 ? "{\"success\":true, "+s+" rows affected" : "{\"success\":false, \"error\":\"0 rows affected\"}";
-    	} catch (SQLException e) {
-    	      return "{\"success\":false, \"error\":\""+getError(e)+"\"}";
-
-    	}
-    }
-    // register a chatroom
-    public String Createroom(int roomID){
-        // Here's a bit of useful code, use it or delete it 
-      	try (PreparedStatement ps = conn.prepareStatement("INSERT INTO chatroom VALUES(?)");){
-      		ps.setInt(1, roomID);
-      		ps.executeUpdate();
-      		return "{\"success\":true}";
-         } catch (SQLException e) {
-            return "{\"success\":false, \"error\":\""+getError(e)+"\"}";
-        }     
-      }
-    // remove a chatroom
-    public String removeRoom(int roomID){
-        // Here's a bit of useful code, use it or delete it 
-      	try (PreparedStatement ps = conn.prepareStatement("DELETE FROM chatroom WHERE roomID=?");){
-      		ps.setInt(1, roomID);
-      		ps.executeUpdate();
-      		return "{\"success\":true}";
-         } catch (SQLException e) {
-            return "{\"success\":false, \"error\":\""+getError(e)+"\"}";
-        }     
-      }
-    public String sendMessage(String senderID, int roomID,Time time, String txt, String img){
-        // Here's a bit of useful code, use it or delete it 
-      	try (PreparedStatement ps = conn.prepareStatement("INSERT INTO message VALUES(?,?,?,?,?)");){
-      		ps.setString(1, senderID);
-      		ps.setInt(2, roomID);
-      		ps.setTime(3, time);
-      		ps.setString(4, txt);
-      		ps.setString(5, img);
-      		ps.executeUpdate();
-      		return "{\"success\":true}";
-         } catch (SQLException e) {
-            return "{\"success\":false, \"error\":\""+getError(e)+"\"}";
-        }     
-      }
-    public String removeMessage(String senderID, int roomID,Time time){
-        // Here's a bit of useful code, use it or delete it 
-      	try (PreparedStatement ps = conn.prepareStatement("DELETE FROM message WHERE senderID=? AND roomID=? AND time=?");){
-      		ps.setString(1, senderID);
-      		ps.setInt(2, roomID);
-      		ps.setTime(3, time);
-      		ps.executeUpdate();
-      		return "{\"success\":true}";
-         } catch (SQLException e) {
-            return "{\"success\":false, \"error\":\""+getError(e)+"\"}";
-        }     
-      }
-    // Return a JSON document containing lots of information about a student, it should validate against the schema found in information_schema.json
-    public String getChatRooms(String username) throws SQLException{
-        
-        try(PreparedStatement st = conn.prepareStatement(
-            // replace this with something more useful
-            "SELECT jsonb_build_object('Chatrooms',Chatroom) AS jsondata FROM BasicInformation WHERE username=?"
-            );){
-            
-            st.setString(1, username);
-            
-            ResultSet rs = st.executeQuery();
-            
-            if(rs.next())
-              return rs.getString("jsondata");
-            else
-              return "{\"user\":\"does not exist :(\"}"; 
-            
-        } 
+    
+    public String addMessage(Message message){
+    String sql = "INSERT INTO Messages (senderID, roomID, timestamp, text, image) VALUES (?, ?, ?, ?, ?)";
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setString(1, message.getSenderID());
+        stmt.setInt(2, message.getRoomID());
+        stmt.setString(3, message.getTimestamp());
+        stmt.setString(4, message.getText());
+        stmt.setString(5, message.getImage());
+        stmt.executeUpdate();
+        return "{\"success\":true}";
+      } catch (SQLException e) {
+          return "{\"success\":false, \"error\":\""+getError(e)+"\"}";
+      }     
     }
 
+    public String removeMessage(Message message){
+    String sql = "DELETE FROM Messages WHERE senderID = ? AND roomID = ? AND timestamp = ?";
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setString(1, message.getSenderID());
+        stmt.setInt(2, message.getRoomID());
+        stmt.setString(3, message.getTimestamp());
+        stmt.executeUpdate();
+        int rowsAffected = stmt.executeUpdate();
+        if (rowsAffected == 0) {
+            return "{\"success\":false, \"error\":\"User does not exist\"}";
+        }        
+        return "{\"success\":true}";
+      } catch (SQLException e) {
+          return "{\"success\":false, \"error\":\""+getError(e)+"\"}";
+      }
+    }
+    
     // This is a hack to turn an SQLException into a JSON string error message. No need to change.
     public static String getError(SQLException e){
        String message = e.getMessage();
