@@ -3,20 +3,11 @@ package client;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridLayout;
-import java.sql.SQLException;
-import java.sql.Time;
-import java.util.Date;
 
 import javax.swing.*;
 
 public class PanelView extends JPanel implements View{
-	ClientController cc = new ClientController();
-	
-	
-	
 	public PanelView() {
-		
 		JTextField t1 = new JTextField();
 		JTextArea ta1 = new JTextArea("Chatroom #43526");
 		ta1.setBounds(350, 0, 200, 20);
@@ -31,7 +22,8 @@ public class PanelView extends JPanel implements View{
 		
 		
 	}
-	public PanelView(int w, int h) {
+	public PanelView(int w, int h) throws Exception {
+		ClientConnection cc = new ClientConnection();
 		setLocation(200, 0);
 		setPreferredSize(new Dimension(w,h));
 		JTextArea ta1 = new JTextArea("Chatroom #43526");
@@ -44,22 +36,12 @@ public class PanelView extends JPanel implements View{
 		t1.setFont(new Font("Arial",10,20));
 		t1.addActionListener(e->{
 			Long time = System.currentTimeMillis();
-			try {
-				System.out.println(time+" : "+ChatroomView.u.getName()+" : "+t1.getText()+" : "+ChatroomView.RoomID);
-				cc.Sendmsg(time,ChatroomView.u.getName(),"",t1.getText(),ChatroomView.RoomID);
-			} catch (ClassNotFoundException | SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			System.out.println(time+" : "+ChatroomView.u.getUsername()+" : "+t1.getText()+" : "+ChatroomView.RoomID);
+			cc.createMessage(ChatroomView.u.getUsername(), ChatroomView.RoomID, time, t1.getText());
 		});
 		
 		add(ta1);
 		add(t1);
 		setLayout(null);
-		
-		
-		
-		
 	}
-	
 }
