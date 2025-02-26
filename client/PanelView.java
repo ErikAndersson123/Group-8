@@ -6,6 +6,8 @@ import java.awt.Font;
 
 import javax.swing.*;
 
+import server.Chatroom;
+
 public class PanelView extends JPanel implements View{
 	public PanelView() {
 		JTextField t1 = new JTextField();
@@ -22,14 +24,15 @@ public class PanelView extends JPanel implements View{
 		
 		
 	}
-	public PanelView(int w, int h) throws Exception {
+	public PanelView(int w, int h,int roomID) throws Exception {
 		ClientConnection cc = new ClientConnection();
 		setLocation(200, 0);
 		setPreferredSize(new Dimension(w,h));
-		JTextArea ta1 = new JTextArea("Chatroom #43526");
+		JTextArea ta1 = new JTextArea("Chatroom "+roomID);
 		ta1.setBounds(getX()+w/2-50, 0, 100, 20);
 		ta1.setEditable(false);
 		ta1.setBackground(Color.LIGHT_GRAY);
+		
 		JTextField t1 = new JTextField();
 		t1.setToolTipText("Type your message here");
 		t1.setBounds(getX()+10,h-100, w-50, 50);
@@ -38,8 +41,8 @@ public class PanelView extends JPanel implements View{
 			if (t1.getText().length() < 1)
 				return;
 			Long time = System.currentTimeMillis();
-			System.out.println(time+" : "+ChatroomView.u.getUsername()+" : "+t1.getText()+" : "+ChatroomView.RoomID);
-			cc.createMessage(ChatroomView.u.getUsername(), ChatroomView.RoomID, time, t1.getText());
+			System.out.println(time+" : "+ChatroomView.u.getUsername()+" : "+t1.getText()+" : "+roomID);
+			cc.createMessage(ChatroomView.u.getUsername(), roomID, time, t1.getText());
 			t1.setText("");
 		});
 		
