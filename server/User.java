@@ -1,27 +1,37 @@
 package server;
 
 public class User {
-    private String name;
+    
+    private int userID;
+    private String username;
     private String password;
     
-    public User(String name, String password){
-        this.name = name;
+    public User(String username, String password){
+        this.username = username;
         this.password = password;
     }
-
-    public String getName() {
-        return name;
+    
+    public int getUserID() {
+        return userID;
     }
     
-    public void setName(String name) {
-        this.name = name;
+    public void setUserID(int userID) {
+        this.userID = userID;
+    }
+    
+    public String getUsername() {
+        return username;
+    }
+    
+    public void setUsername(String username) {
+        this.username = username;
     }
     
     public String getPassword() {
         return password;
     }
     
-    public void setPassword(String password) {
+    public void setPasword(String password) {
         this.password = password;
     }
 }
