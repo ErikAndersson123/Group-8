@@ -35,9 +35,12 @@ public class PanelView extends JPanel implements View{
 		t1.setBounds(getX()+10,h-100, w-50, 50);
 		t1.setFont(new Font("Arial",10,20));
 		t1.addActionListener(e->{
+			if (t1.getText().length() < 1)
+				return;
 			Long time = System.currentTimeMillis();
 			System.out.println(time+" : "+ChatroomView.u.getUsername()+" : "+t1.getText()+" : "+ChatroomView.RoomID);
 			cc.createMessage(ChatroomView.u.getUsername(), ChatroomView.RoomID, time, t1.getText());
+			t1.setText("");
 		});
 		
 		add(ta1);
