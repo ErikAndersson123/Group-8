@@ -107,63 +107,77 @@ public class DataLogic {
             
             if (clientMessage.startsWith("DELETE_CHATROOM")) {
                 String[] parts = clientMessage.split(" ");
-                String chatroomName = parts[1];
-                dataLogic.deleteChatroom(chatroomName);
+                int roomID = Integer.parseInt(parts[1]);
+                dataLogic.deleteChatroom(roomID);
                 out.println("Chatroom deleted successfully.");
             }
 
             if (clientMessage.startsWith("CREATE_MESSAGE")) {
                 String[] parts = clientMessage.split(" ");
                 String username = parts[1];
-                String chatroomName = parts[2];
+                int roomID = Integer.parseInt(parts[2]);
                 String timestamp = parts[3];
                 String text = parts[4];
-                dataLogic.createMessage(username, chatroomName, timestamp, text);
+                String image = parts[5];
+                dataLogic.createMessage(username, roomID, timestamp, text, image); //it doesn reach this method
                 out.println("Message created successfully.");
             }
             
             if (clientMessage.startsWith("DELETE_MESSAGE")) {
                 String[] parts = clientMessage.split(" ");
                 int messageID = Integer.parseInt(parts[1]);
-                String chatroomName = parts[2];
-                dataLogic.deleteMessage(messageID, chatroomName);
+                int roomID = Integer.parseInt(parts[2]);
+                dataLogic.deleteMessage(messageID, roomID);
                 out.println("Message deleted successfully.");
             }
             
             if (clientMessage.startsWith("ADD_CHATROOM_USER")) {
                 String[] parts = clientMessage.split(" ");
                 String username = parts[1];
-                String chatroomName = parts[2];
-                dataLogic.addChatroomUser(username, chatroomName);
+                int roomID = Integer.parseInt(parts[2]);
+                dataLogic.addChatroomUser(username, roomID);
                 out.println("User added to chatroom successfully.");
             }
             
             if (clientMessage.startsWith("REMOVE_CHATROOM_USER")) {
                 String[] parts = clientMessage.split(" ");
-                int userID = Integer.parseInt(parts[1]);
-                String chatroomName = parts[2];
-                dataLogic.removeChatroomUser(userID, chatroomName);
+                String username = parts[1];
+                int roomID = Integer.parseInt(parts[2]);
+                dataLogic.removeChatroomUser(username, roomID);
                 out.println("User removed from chatroom successfully.");
-            }
-            
-            if (clientMessage.startsWith("GET_CHATROOM_USERS")) {
-                String[] parts = clientMessage.split(" ");
-                String chatroomName = parts[1];
-                LinkedList<User> chatroomUsers = dataLogic.chatroomUsers(chatroomName);
-                out.println("Chatroom users retrieved successfully.");
             }
             
             if (clientMessage.startsWith("GET_CHAT_HISTORY")) {
                 String[] parts = clientMessage.split(" ");
-                String chatroomName = parts[1];
-                LinkedList<Message> chatHistory = dataLogic.chatHistory(chatroomName);   
-                out.println("Chat history retrieved successfully.");
+                int roomID = Integer.parseInt(parts[1]);
+                LinkedList<Message> chatHistory = dataLogic.chatHistory(roomID);   
+                String messageInfo = "";
+
+                for (Message message : chatHistory) {
+                    messageInfo += messageInfo(message) + " ";
+                }
+                
+                out.println(messageInfo);
+            }
+            
+            if (clientMessage.startsWith("GET_CHATROOM_USERS")) {
+                String[] parts = clientMessage.split(" ");
+                int roomID = Integer.parseInt(parts[1]);
+                String chatroomUsers = dataLogic.chatroomUsers(roomID);
+                out.println(chatroomUsers);
+            }
+            
+            if (clientMessage.startsWith("GET_USER_CHATROOMS")) {
+                String[] parts = clientMessage.split(" ");
+                String username = parts[1];
+                String userChatrooms = dataLogic.userChatrooms(username);
+                out.println(userChatrooms);
             }
         }
     }
 
     public void createUser(String username, String password) {
-        User user = new User(username, password);
+        User user = new User(0, username, password);
         dh.registerUser(user);
         user.setUserID(dh.getUserID(user));
         users.add(user);
@@ -176,7 +190,7 @@ public class DataLogic {
                 dh.unregisterUser(user);
                 users.remove(user);
                 for (Chatroom chatroom : chatrooms) {
-                    chatroom.removeChatroomUser(user); // Remove the user from chatrooms
+                    chatroom.removeChatroomUser(user);
                 }
                 break;
             }
@@ -201,9 +215,9 @@ public class DataLogic {
         notifySubscribers();
     }
 
-    public void deleteChatroom(String chatroomName) {
+    public void deleteChatroom(int roomID) {
         for (Chatroom chatroom : chatrooms) {
-            if (chatroom.getName().equals(chatroomName)) {
+            if (chatroom.getRoomID() == roomID) {
                 dh.unregisterChatroom(chatroom);
                 chatrooms.remove(chatroom);
                 break;
@@ -212,32 +226,31 @@ public class DataLogic {
         notifySubscribers();
     }
 
-    public void createMessage(String username, String chatroomName, String timestamp, String text) {
+    public void createMessage(String username, int roomID, String timestamp, String text, String image) {
 
         int userID = 0;
         
         for (User user : users) {
-            if (user.getUsername() == username) {
+            if (user.getUsername().equals(username)) {
                 userID = user.getUserID();
             }
         }
         
         for (Chatroom chatroom : chatrooms) {
-            if (chatroom.getName().equals(chatroomName)) {
+            if (chatroom.getRoomID() == roomID) {
                 int messageID = dh.nextAvailableMessageID(chatroom);
-                int roomID = chatroom.getRoomID();
-                Message message = new Message(messageID, userID, roomID, timestamp, text);
+                Message message = new Message(messageID, userID, roomID, timestamp, text, image);
                 dh.addMessage(message);
-                chatroom.addMessage(message); //denna raden gör att programmet inte funkar
+                chatroom.addMessage(message);
                 break;
             }
         }
         notifySubscribers();
     }
 
-    public void deleteMessage(int messageID, String chatroomName) {
+    public void deleteMessage(int messageID, int roomID) {
         for (Chatroom chatroom : chatrooms) {
-            if (chatroom.getName().equals(chatroomName)) {
+            if (chatroom.getRoomID() == roomID) {
                 for (Message message : chatroom.getChatHistory()) {
                     if (message.getMessageID() == messageID) {
                         dh.removeMessage(message);
@@ -250,11 +263,11 @@ public class DataLogic {
         notifySubscribers();
     }
 
-    public void addChatroomUser(String username, String chatroomName) {
+    public void addChatroomUser(String username, int roomID) {
         for (User user : users) {
             if (user.getUsername().equals(username)) {
                 for (Chatroom chatroom : chatrooms) {
-                    if (chatroom.getName().equals(chatroomName)) {
+                    if (chatroom.getRoomID() == roomID) {
                         dh.registerChatroomUser(user, chatroom);
                         chatroom.addChatroomUser(user);
                         break;
@@ -265,11 +278,13 @@ public class DataLogic {
         notifySubscribers();
     }
 
-    public void removeChatroomUser(int userID, String chatroomName) {
+    public void removeChatroomUser(String username, int roomID) {
+        
+        
         for (User user : users) {
-            if (user.getUserID() == userID) {
+            if (user.getUsername().equals(username)) {
                 for (Chatroom chatroom : chatrooms) {
-                    if (chatroom.getName().equals(chatroomName)) {
+                    if (chatroom.getRoomID() == roomID) {
                         dh.unregisterChatroomUser(user, chatroom);
                         chatroom.removeChatroomUser(user);
                         break;
@@ -279,19 +294,25 @@ public class DataLogic {
         }
         notifySubscribers();
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
-    public LinkedList<User> chatroomUsers(String chatroomName) {
-        for (Chatroom chatroom : chatrooms) {
-            if (chatroom.getName().equals(chatroomName)) {
-                return chatroom.getChatroomUsers();
-            }
-        }
-        return new LinkedList<>();
-    }
 
-    public LinkedList<Message> chatHistory(String chatroomName) {
+
+    public LinkedList<Message> chatHistory(int roomID) {
         for (Chatroom chatroom : chatrooms) {
-            if (chatroom.getName().equals(chatroomName)) {
+            if (chatroom.getRoomID() == roomID) {
                 return chatroom.getChatHistory();
             }
         }
@@ -301,13 +322,45 @@ public class DataLogic {
     public String messageInfo(Message message) {
         for (User user : users) {
             if (user.getUserID() == message.getSenderID()) {
-                return user.getUserID() + ": " + message.getText();
+                return user.getUsername() + ": " + message.getText();
             }
         }
-        return "Deleted User: " + message.getSenderID();
+        return "Deleted User: " + message.getText();
     }
     
+    public String chatroomUsers(int roomID) {
+        String string = "";
+        for (Chatroom chatroom : chatrooms) {
+            if (chatroom.getRoomID() == roomID) {
+                for (User user : chatroom.getChatroomUsers()) {
+                    string += user.getUsername() + " ";
+                }
+            }
+        }
+        return string;
+    }
+        
+    public String userChatrooms(String username) {
+        String string = "";
+        for (Chatroom chatroom : chatrooms) {
+            for (User user : chatroom.getChatroomUsers()) {
+                if (user.getUsername().equals(username)) {
+                    string += chatroom.getRoomID() + " ";
+                }
+            }
+        }
+        return string;
+    }
+    
+ 
+    
+    
+    
+    
+    
 
+
+    
     
     
     
@@ -326,7 +379,7 @@ public class DataLogic {
     }
     
     public void loadMessagesFromDatabase() {
-        for (Chatroom chatroom : chatrooms) {
+            for (Chatroom chatroom : chatrooms) {
             LinkedList<Message> messages = dh.getAllMessages(chatroom);
             chatroom.setChatHistory(messages);
         }
@@ -351,6 +404,7 @@ public class DataLogic {
     
     
     
+    
 
     public void addSubscriber(Observer observer) {
         if (!observers.contains(observer)) {
@@ -363,8 +417,48 @@ public class DataLogic {
     }
 
     public void notifySubscribers() {
+        
+        for (User user : users) {
+            System.out.println(user.getUserID() + " " + user.getUsername() + " " + user.getPassword());
+        }
+        
+        System.out.println();
+        
+        for (Chatroom chatroom : chatrooms) {
+            System.out.println(chatroom.getRoomID() + " " + chatroom.getName());
+        }
+        
+        System.out.println();
+        
+        for (Chatroom chatroom : chatrooms) {
+            for (Message message : chatroom.getChatHistory()) {
+                System.out.println(message.getMessageID() + " " + message.getSenderID() + " " + 
+                message.getRoomID() + " " + message.getTimestamp() + " " + message.getText());
+            }
+        }
+        
+        System.out.println();
+        
+        for (Chatroom chatroom : chatrooms) {
+            for (User user : chatroom.getChatroomUsers()) {
+                System.out.println(user.getUserID() + " " + chatroom.getRoomID());
+            }
+        }
+        
+        System.out.println();
+        
+        for (Chatroom chatroom : chatrooms) {
+            for (Message message : chatroom.getChatHistory()) {
+                System.out.println(messageInfo(message));   
+            }
+        }
+        
+        System.out.println();        
+        
+        
         for (Observer observer : observers) {
             observer.update();
         }
     }
 }
+

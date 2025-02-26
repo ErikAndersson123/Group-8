@@ -8,13 +8,15 @@ public class Message {
     private int roomID;
     private String timestamp;
     private String text;
+    private String image;
     
-    public Message(int messageID, int senderID, int roomID, String timestamp, String text) {
+    public Message(int messageID, int senderID, int roomID, String timestamp, String text, String image) {
         this.messageID = messageID;
         this.senderID = senderID;
         this.roomID = roomID;
         this.timestamp = timestamp;
         this.text = text;
+        this.image = image;
     }
     
     public int getMessageID() {
@@ -35,5 +37,9 @@ public class Message {
     
     public String getText() {
         return text;
+    }
+    
+    public String getImage() {
+        return image;
     }
 }

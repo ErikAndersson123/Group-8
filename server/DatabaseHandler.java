@@ -3,6 +3,7 @@ package server;
 import java.sql.*;
 import java.util.Properties;
 import java.util.LinkedList;
+import java.math.*;
 
 public class DatabaseHandler {
     
@@ -109,13 +110,16 @@ public class DatabaseHandler {
     }   
 
     public String addMessage(Message message) {
-        String sql = "INSERT INTO Messages (messageID, senderID, roomID, timestamp, text) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Messages (messageID, senderID, roomID, timestamp, text, image) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, message.getMessageID());
             stmt.setInt(2, message.getSenderID());
             stmt.setInt(3, message.getRoomID());
+            
             stmt.setString(4, message.getTimestamp());
+
             stmt.setString(5, message.getText());
+            stmt.setString(6, message.getImage());
             stmt.executeUpdate();
             return "{\"success\":true}";
         } catch (SQLException e) {
@@ -250,10 +254,7 @@ public class DatabaseHandler {
                 String username = rs.getString("username");
                 String password = rs.getString("password");
                 
-                User user = new User(username, password);
-            
-                user.setUserID(userID);
-                
+                User user = new User(userID, username, password);
                 users.add(user);
             }
         } catch (SQLException e) {
@@ -286,7 +287,7 @@ public class DatabaseHandler {
     
     public LinkedList<Message> getAllMessages(Chatroom chatroom) {
         LinkedList<Message> messages = new LinkedList<>();
-        String sql = "SELECT messageID, senderID, roomID, timestamp, text FROM Messages WHERE roomID = ?";
+        String sql = "SELECT messageID, senderID, roomID, timestamp, text, image FROM Messages WHERE roomID = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, chatroom.getRoomID());
@@ -298,8 +299,9 @@ public class DatabaseHandler {
                     int roomID = rs.getInt("roomID");
                     String timestamp = rs.getString("timestamp");
                     String text = rs.getString("text");
+                    String image = rs.getString("image");
 
-                    Message message = new Message(messageID, senderID, roomID, timestamp, text);
+                    Message message = new Message(messageID, senderID, roomID, timestamp, text, image);
                     messages.add(message);
                 }
             }   
@@ -322,8 +324,7 @@ public class DatabaseHandler {
                     String username = rs.getString("username");
                     String password = rs.getString("password");
 
-                    User user = new User(username, password);
-                    user.setUserID(userID);
+                    User user = new User(userID, username, password);
                     users.add(user);
                 }
             }
