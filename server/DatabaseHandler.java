@@ -3,6 +3,8 @@ package server;
 import java.sql.*;
 import java.util.Properties;
 import java.util.LinkedList;
+import java.sql.Timestamp;
+
 
 public class DatabaseHandler {
     
@@ -11,7 +13,7 @@ public class DatabaseHandler {
     static final String DBNAME = "";
     static final String DATABASE = "jdbc:postgresql://localhost/" + DBNAME;
     static final String USERNAME = "postgres";
-    static final String PASSWORD = "postgres";
+    static final String PASSWORD = "5412";
     
     public DatabaseHandler() {
         try {
@@ -114,7 +116,7 @@ public class DatabaseHandler {
             stmt.setInt(1, message.getMessageID());
             stmt.setInt(2, message.getSenderID());
             stmt.setInt(3, message.getRoomID());
-            stmt.setString(4, message.getTimestamp());
+            stmt.setTimestamp(4, message.getTimestamp());
             stmt.setString(5, message.getText());
             stmt.executeUpdate();
             return "{\"success\":true}";
@@ -296,11 +298,12 @@ public class DatabaseHandler {
                     int messageID = rs.getInt("messageID");
                     int senderID = rs.getInt("senderID");
                     int roomID = rs.getInt("roomID");
-                    String timestamp = rs.getString("timestamp");
+                    Timestamp timestamp = rs.getTimestamp("timestamp");
                     String text = rs.getString("text");
 
                     Message message = new Message(messageID, senderID, roomID, timestamp, text);
                     messages.add(message);
+                    //System.out.println("Debugging getAllMessages/DatabaseHandler: " + message);
                 }
             }   
         } catch (SQLException e) {

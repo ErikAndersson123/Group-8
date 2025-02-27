@@ -4,6 +4,12 @@ import java.io.*;
 import java.net.*;
 import java.util.LinkedList;
 import client.Observer;
+import com.google.gson.Gson;
+
+//import java.sql.Date;
+import java.sql.Timestamp;
+//import java.text.ParseException;
+//import java.text.SimpleDateFormat;
 
 public class DataLogic {
 
@@ -26,6 +32,20 @@ public class DataLogic {
             loadChatroomsFromDatabase();
             loadMessagesFromDatabase();
             loadChatroomUsersFromDatabase();
+
+            for (User user : users) {
+                System.out.println(user);
+            }
+
+            for (Chatroom chatroom : chatrooms) {
+                System.out.println("______START_____");
+                System.out.println(chatroom);
+                    LinkedList<Message> messages = chatroom.getChatHistory();
+                    for (Message message: messages) {
+                        System.out.println(message);
+                    }
+                System.out.println("_______END______");
+            }
             
             while (true) {
                 Socket socket = serverSocket.accept();
@@ -95,6 +115,10 @@ public class DataLogic {
                 String password = parts[2];
                 if (dataLogic.authenticateUser(username, password)) {
                     out.println("User authenticated successfully.");
+                    System.out.println("User autheticated: " + username);
+                } else {
+                    out.println("User authentication failed.");
+                    System.out.println("Authentication failed: " + username);
                 }
             }
             
@@ -112,15 +136,19 @@ public class DataLogic {
                 out.println("Chatroom deleted successfully.");
             }
 
+
+
             if (clientMessage.startsWith("CREATE_MESSAGE")) {
                 String[] parts = clientMessage.split(" ");
                 String username = parts[1];
                 String chatroomName = parts[2];
-                String timestamp = parts[3];
-                String text = parts[4];
-                dataLogic.createMessage(username, chatroomName, timestamp, text);
+                //Timestamp timestamp = parts[3];
+                String text = parts[3];
+                dataLogic.createMessage(username, chatroomName, text);
                 out.println("Message created successfully.");
             }
+
+
             
             if (clientMessage.startsWith("DELETE_MESSAGE")) {
                 String[] parts = clientMessage.split(" ");
@@ -156,9 +184,22 @@ public class DataLogic {
             if (clientMessage.startsWith("GET_CHAT_HISTORY")) {
                 String[] parts = clientMessage.split(" ");
                 String chatroomName = parts[1];
-                LinkedList<Message> chatHistory = dataLogic.chatHistory(chatroomName);   
-                out.println("Chat history retrieved successfully.");
+                System.out.println(chatroomName);
+                LinkedList<Message> chatHistory = dataLogic.chatHistory(chatroomName);
+                Gson gson = new Gson();
+                String jsonMessages = gson.toJson(chatHistory);
+
+                out.println(jsonMessages);   
+                //out.println("Chat history retrieved successfully.");
             }
+            if (clientMessage.startsWith("GET_CHATROOMS")) {
+                LinkedList<Chatroom> chatrooms = dh.getAllChatrooms();
+                Gson gson = new Gson();
+                String jsonMessages = gson.toJson(chatrooms);
+                System.out.println(chatrooms);
+                out.println(jsonMessages);   
+            }
+
         }
     }
 
@@ -212,8 +253,8 @@ public class DataLogic {
         notifySubscribers();
     }
 
-    public void createMessage(String username, String chatroomName, String timestamp, String text) {
-
+    public void createMessage(String username, String chatroomName, String text) {
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         int userID = 0;
         
         for (User user : users) {

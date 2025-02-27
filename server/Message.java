@@ -1,15 +1,16 @@
 package server;
 
+import java.sql.Timestamp;
 
 public class Message {
     
     private int messageID;
     private int senderID;
     private int roomID;
-    private String timestamp;
+    private Timestamp timestamp;
     private String text;
     
-    public Message(int messageID, int senderID, int roomID, String timestamp, String text) {
+    public Message(int messageID, int senderID, int roomID, Timestamp timestamp, String text) {
         this.messageID = messageID;
         this.senderID = senderID;
         this.roomID = roomID;
@@ -29,11 +30,22 @@ public class Message {
         return roomID;
     }
     
-    public String getTimestamp() {
+    public java.sql.Timestamp getTimestamp() {
         return timestamp;
     }
     
     public String getText() {
         return text;
     }
+    @Override
+    public String toString() {
+        return "Message{" +
+            "messageID=" + messageID +
+            ", senderID=" + senderID +
+            ", roomID=" + roomID +
+            ", timestamp=" + timestamp +
+            ", text='" + text + '\'' +
+            '}';
+    }
+
 }

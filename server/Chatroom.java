@@ -62,4 +62,12 @@ public class Chatroom {
     public void setChatHistory(LinkedList<Message> chatHistory) {
         this.chatHistory = chatHistory;
     }
+    @Override
+    public String toString() {
+        return "Chatroom{" +
+            "roomID=" + roomID +
+            ", chatroomName='" + chatroomName + '\'' +
+            '}';
+    }
+
 }

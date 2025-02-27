@@ -2,6 +2,7 @@ package client;
 
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.HeadlessException;
 import java.awt.Point;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -10,14 +11,14 @@ import java.awt.event.MouseListener;
 
 import javax.swing.*;
 import server.User;
-import server.PortalConnection;
 import java.sql.*;
 
 public class UserLoginView extends JFrame implements View{
 	private String pswrd = "";
+	private static ClientConnection c;
 	public static void main(String[] args) {
 		UserLoginView d = new UserLoginView();
-		
+		c = new ClientConnection();
 		
 	}
 	@SuppressWarnings("deprecation")
@@ -63,15 +64,28 @@ public class UserLoginView extends JFrame implements View{
 			System.out.println(tx1.getText());
 			String username = tx1.getText();
             String password = pswrd;
-            PortalConnection p = new PortalConnection();
-            User user = new User(username, password);
-				if (p.authenticateUser(user)) {
-		               new ChatroomView(user);
-		               this.dispose();
-		            }
-            
+			User user = new User(username, password);
+			System.out.println("login request!");
+			try {
+				if (c.authenticateUser(username, password)) {
+					System.out.println("login success!");
+					UserLoginView.this.dispose();	
+					new ChatroomView(user);
+					
+				} else {
+					JOptionPane.showMessageDialog(UserLoginView.this, "Invalid username or password.", "Login Failed", JOptionPane.ERROR_MESSAGE);
+
+				}
+			} catch (HeadlessException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			
 		});
+
 		b1.setCursor(new Cursor(HAND_CURSOR));
 		b1.setFocusable(false);
 		add(b1);
