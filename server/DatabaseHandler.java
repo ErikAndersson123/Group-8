@@ -1,4 +1,4 @@
-package server;
+package Server;
 
 import java.sql.*;
 import java.util.Properties;
@@ -115,9 +115,7 @@ public class DatabaseHandler {
             stmt.setInt(1, message.getMessageID());
             stmt.setInt(2, message.getSenderID());
             stmt.setInt(3, message.getRoomID());
-            
-            stmt.setString(4, message.getTimestamp());
-
+            stmt.setString(4, String.valueOf(message.getTimestamp()));
             stmt.setString(5, message.getText());
             stmt.setString(6, message.getImage());
             stmt.executeUpdate();
@@ -211,7 +209,9 @@ public class DatabaseHandler {
                     messageIDs.add(messageID);
                 }
             }
-        } catch (SQLException e) {}
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         
         int nextMessageID = 1;
         int index = 0;
@@ -297,7 +297,7 @@ public class DatabaseHandler {
                     int messageID = rs.getInt("messageID");
                     int senderID = rs.getInt("senderID");
                     int roomID = rs.getInt("roomID");
-                    String timestamp = rs.getString("timestamp");
+                    long timestamp = Long.parseLong(rs.getString("timestamp"));
                     String text = rs.getString("text");
                     String image = rs.getString("image");
 
@@ -329,7 +329,7 @@ public class DatabaseHandler {
                 }
             }
         } catch (SQLException e) {
-        e.printStackTrace();
+            e.printStackTrace();
         }
 
         return users;

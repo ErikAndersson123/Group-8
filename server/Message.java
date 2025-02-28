@@ -1,16 +1,27 @@
-package server;
+package Server;
 
+import java.io.Serializable;
 
-public class Message {
+public class Message implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
     
     private int messageID;
     private int senderID;
     private int roomID;
-    private String timestamp;
+    private long timestamp;
     private String text;
     private String image;
     
-    public Message(int messageID, int senderID, int roomID, String timestamp, String text, String image) {
+    public Message(int senderID, int roomID, long timestamp, String text, String image) {
+        this.senderID = senderID;
+        this.roomID = roomID;
+        this.timestamp = timestamp;
+        this.text = text;
+        this.image = image;
+    }
+    
+    public Message(int messageID, int senderID, int roomID, long timestamp, String text, String image) {
         this.messageID = messageID;
         this.senderID = senderID;
         this.roomID = roomID;
@@ -31,7 +42,7 @@ public class Message {
         return roomID;
     }
     
-    public String getTimestamp() {
+    public long getTimestamp() {
         return timestamp;
     }
     

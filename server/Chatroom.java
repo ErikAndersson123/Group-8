@@ -1,12 +1,22 @@
-package server;
+package Server;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 
-public class Chatroom {
+public class Chatroom implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
+    
     private int roomID;
     private String chatroomName;
     private LinkedList<User> chatroomUsers;
     private LinkedList<Message> chatHistory;
+    
+    public Chatroom(String chatroomName) {
+        this.chatroomName = chatroomName;
+        this.chatroomUsers = new LinkedList<>();
+        this.chatHistory = new LinkedList<>();
+    }
 
     public Chatroom(int roomID, String chatroomName) {
         this.roomID = roomID;
@@ -17,6 +27,10 @@ public class Chatroom {
 
     public int getRoomID() {
         return roomID;
+    }
+    
+    public void setRoomID(int roomID) {
+        this.roomID = roomID;
     }
     
     public String getName() {
