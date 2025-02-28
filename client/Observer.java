@@ -1,7 +1,8 @@
-package client;
+package Client;
 
-public interface Observer {
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 
-    public void update();
-    public void subscribe();
+public interface Observer extends Remote {
+    void update() throws RemoteException;
 }
