@@ -1,4 +1,4 @@
-package Client;
+package client;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -7,8 +7,8 @@ import java.util.LinkedList;
 
 import javax.swing.*;
 
-import Server.Chatroom;
-import Server.User;
+import server.Chatroom;
+import server.User;
 
 public class ChatroomView extends JFrame {
     private static final long serialVersionUID = 1L;
