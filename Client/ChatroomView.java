@@ -20,6 +20,8 @@ public class ChatroomView extends JFrame {
     private int[] ch;
     private DefaultListModel<String> listModel;
     private PanelView pv;
+
+    public Chatroom selected = null;
     public ChatroomView(User user, RMIClient rmiClient) throws Exception {
         u = user;
         this.rmiClient = rmiClient;
@@ -52,15 +54,23 @@ public class ChatroomView extends JFrame {
         list.setSelectedIndex(0);
         list.addListSelectionListener(e->{
             try {
+                String ChatroomName = (String) list.getSelectedValue();
+                System.out.println(ChatroomName);
+                for (Chatroom chatroom : Chatrooms) {
+                    if (chatroom.getName().equals(ChatroomName)){
+                        selected = chatroom;
+                        System.out.println("Selected " + selected.getName());
+                        break;
+                    }
+                }
                 remove(pv);
-                pv = new PanelView(600,600, (String) list.getSelectedValue(), cr[list.getSelectedIndex()] , rmiClient, user);
+                pv = new PanelView(600,600, selected, rmiClient, user);
                 
                 add(pv);
                 invalidate();
                 validate();
                 repaint();
             } catch (Exception e1) {
-                // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
         });
@@ -108,7 +118,7 @@ public class ChatroomView extends JFrame {
 
                 if (confirm == JOptionPane.YES_OPTION) {
                     try {
-                        rmiClient.getClientLogic().removeChatroomUser(u, cr[list.getSelectedIndex()]);
+                        rmiClient.getClientLogic().removeChatroomUser(u, selected);
                         JOptionPane.showMessageDialog(null, "You have left the chatroom.");
                         remove(pv); 
                         invalidate();
@@ -131,7 +141,7 @@ public class ChatroomView extends JFrame {
         
                 if (confirm == JOptionPane.YES_OPTION) {
                     try {
-                        rmiClient.getClientLogic().addChatroomUser(u, cr[list.getSelectedIndex()]);
+                        rmiClient.getClientLogic().addChatroomUser(u, selected);
                         JOptionPane.showMessageDialog(null, "Chat joined successfully!");
                         
                         revalidate();
@@ -146,16 +156,19 @@ public class ChatroomView extends JFrame {
 
         createButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                
                 String name = JOptionPane.showInputDialog("New Chatroom");
-                String output = name + " is such a nice name!";
+                String output = name + " Created!";
                 JOptionPane.showMessageDialog(null, output);
-                
                 if (name != null) {
                     try {
-                        rmiClient.getClientLogic().createChatroom(new Chatroom(name));
+                        Chatroom newChatroom = new Chatroom(name);
+                        rmiClient.getClientLogic().createChatroom(newChatroom);
+                        Chatroom chat = rmiClient.getClientLogic().getChatroom(newChatroom.getName());
+                        listModel.addElement(newChatroom.getName());
                         JOptionPane.showMessageDialog(null, "Chatroom Created succesfully!");
-                        rmiClient.getClientLogic().addChatroomUser(u, cr[list.getSelectedIndex()]);
+
+                        rmiClient.getClientLogic().addChatroomUser(u, chat);
+
                         revalidate();
                         repaint();
                     } catch (Exception ex) {

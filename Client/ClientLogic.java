@@ -106,6 +106,9 @@ public class ClientLogic {
     public LinkedList<Chatroom> getChatrooms() throws Exception {
         return dataLogic.getChatrooms();
     }
+    public Chatroom getChatroom(String chatroomName) throws Exception{
+        return dataLogic.getChatroom(chatroomName);
+    }
     
     public int getUserID (User user) throws Exception {
         return dataLogic.getUserID(user);
