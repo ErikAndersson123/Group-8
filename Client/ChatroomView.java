@@ -122,6 +122,51 @@ public class ChatroomView extends JFrame {
             }
         });
 
+        joinButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int confirm = JOptionPane.showConfirmDialog(
+                    null, "Do you want to join this chatroom?", "Confirm Join",
+                    JOptionPane.YES_NO_OPTION
+                );
+        
+                if (confirm == JOptionPane.YES_OPTION) {
+                    try {
+                        rmiClient.getClientLogic().addChatroomUser(u, cr[list.getSelectedIndex()]);
+                        JOptionPane.showMessageDialog(null, "Chat joined successfully!");
+                        
+                        revalidate();
+                        repaint();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(null, "Error joining the chatroom.");
+                    }
+                }
+            }
+        });
+
+        createButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                
+                String name = JOptionPane.showInputDialog("New Chatroom");
+                String output = name + " is such a nice name!";
+                JOptionPane.showMessageDialog(null, output);
+                
+                if (name != null) {
+                    try {
+                        rmiClient.getClientLogic().createChatroom(new Chatroom(name));
+                        JOptionPane.showMessageDialog(null, "Chatroom Created succesfully!");
+                        rmiClient.getClientLogic().addChatroomUser(u, cr[list.getSelectedIndex()]);
+                        revalidate();
+                        repaint();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(null, "Error creating the chatroom.");
+                    }
+                }
+            }
+        });
+        
+
         
         setLayout(new BorderLayout());
 
