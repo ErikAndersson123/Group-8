@@ -2,6 +2,10 @@ package Server;
 
 import Client.Observer;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
@@ -138,6 +142,29 @@ public class DataLogic extends UnicastRemoteObject implements Subject {
     
     
     
+    public byte[] getImageFile(int messageId) throws RemoteException {
+        String imagePath = dh.getImagePath(messageId);
+        
+        if (imagePath == null) {
+            System.out.println("Image path is NULL for message ID: " + messageId);
+            return null;
+        }
+    
+        File file = new File(imagePath);
+        if (!file.exists()) {
+            System.out.println("Image file not found at: " + imagePath);
+            return null;
+        }
+    
+        try (FileInputStream fis = new FileInputStream(file)) {
+            byte[] fileData = new byte[(int) file.length()];
+            fis.read(fileData);
+            return fileData;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
     
     
     

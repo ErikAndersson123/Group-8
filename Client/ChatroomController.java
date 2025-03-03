@@ -4,7 +4,6 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.LinkedList;
 import javax.swing.*;
-import java.awt.*;
 import Server.Chatroom;
 import Server.Message;
 

@@ -3,21 +3,19 @@ package Client;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Point;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
+
+
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.net.MalformedURLException;
-import java.rmi.Naming;
-import java.rmi.NotBoundException;
+
+
 import java.rmi.RemoteException;
 
 import javax.swing.*;
 import Server.User;
-import Server.Subject;
 
 
-import java.sql.*;
+
 
 public class UserLoginView extends JFrame {
 

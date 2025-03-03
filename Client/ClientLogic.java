@@ -5,6 +5,7 @@ import Server.Chatroom;
 import Server.User;
 import Server.Message;
 import java.util.LinkedList;
+import java.sql.Timestamp;
 
 public class ClientLogic {
     
@@ -31,8 +32,8 @@ public class ClientLogic {
         addChatroomUser(user1, chatroom);
         addChatroomUser(user2, chatroom);
 
-        createMessage(new Message(user1.getUserID(), chatroom.getRoomID(), System.currentTimeMillis(), "Hej", null));
-        createMessage(new Message(user2.getUserID(), chatroom.getRoomID(), System.currentTimeMillis(), "Hej", null));
+        createMessage(new Message(user1.getUserID(), chatroom.getRoomID(), getCurrentTimestamp(), "Hej", null));
+        createMessage(new Message(user2.getUserID(), chatroom.getRoomID(), getCurrentTimestamp(), "Hej", null));
 
         pause();
 
@@ -110,8 +111,15 @@ public class ClientLogic {
         return dataLogic.getUserID(user);
     }
 
+    public byte[] getImageFile(int messageId) throws Exception{
+        return dataLogic.getImageFile(messageId);
+    }
+
     public void pause() throws Exception {
         System.out.println("PRESS ENTER");
         while (System.in.read() != '\n');
+    }
+    public Timestamp getCurrentTimestamp() {
+        return new Timestamp(System.currentTimeMillis());
     }
 }

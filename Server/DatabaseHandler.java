@@ -3,7 +3,6 @@ package Server;
 import java.sql.*;
 import java.util.Properties;
 import java.util.LinkedList;
-import java.math.*;
 
 public class DatabaseHandler {
     
@@ -12,7 +11,7 @@ public class DatabaseHandler {
     static final String DBNAME = "";
     static final String DATABASE = "jdbc:postgresql://localhost/" + DBNAME;
     static final String USERNAME = "postgres";
-    static final String PASSWORD = "postgres";
+    static final String PASSWORD = "5412";
     
     public DatabaseHandler() {
         try {
@@ -226,6 +225,25 @@ public class DatabaseHandler {
         
         return nextMessageID;
     }
+
+    public String getImagePath(int messageId) {
+        String sql = "SELECT image FROM messages WHERE messageID = ?";
+        String imagePath = null;
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, messageId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                imagePath = rs.getString("image");
+                System.out.println("Retrieved Image Path: " + imagePath); // Debug Output
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return imagePath;
+    }
     
     
     
@@ -300,7 +318,7 @@ public class DatabaseHandler {
                     int messageID = rs.getInt("messageID");
                     int senderID = rs.getInt("senderID");
                     int roomID = rs.getInt("roomID");
-                    long timestamp = Long.parseLong(rs.getString("timestamp"));
+                    Timestamp timestamp = rs.getTimestamp("timestamp");
                     String text = rs.getString("text");
                     String image = rs.getString("image");
 

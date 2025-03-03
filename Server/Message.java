@@ -1,6 +1,7 @@
 package Server;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 public class Message implements Serializable {
     
@@ -9,11 +10,11 @@ public class Message implements Serializable {
     private int messageID;
     private int senderID;
     private int roomID;
-    private long timestamp;
+    private Timestamp timestamp;
     private String text;
     private String image;
     
-    public Message(int senderID, int roomID, long timestamp, String text, String image) {
+    public Message(int senderID, int roomID, Timestamp timestamp, String text, String image) {
         this.senderID = senderID;
         this.roomID = roomID;
         this.timestamp = timestamp;
@@ -21,7 +22,7 @@ public class Message implements Serializable {
         this.image = image;
     }
     
-    public Message(int messageID, int senderID, int roomID, long timestamp, String text, String image) {
+    public Message(int messageID, int senderID, int roomID, Timestamp timestamp, String text, String image) {
         this.messageID = messageID;
         this.senderID = senderID;
         this.roomID = roomID;
@@ -46,7 +47,7 @@ public class Message implements Serializable {
         return roomID;
     }
     
-    public long getTimestamp() {
+    public Timestamp getTimestamp() {
         return timestamp;
     }
     

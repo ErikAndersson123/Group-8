@@ -8,11 +8,10 @@ public class UserInfoController extends UnicastRemoteObject implements Observer 
     
     private static final long serialVersionUID = 1L;
     
-    private RMIClient rmiClient;
     
-    public UserInfoController(RMIClient rmiClient) throws RemoteException {
+    public UserInfoController(RMIClient c) throws RemoteException {
         super();
-        this.rmiClient = rmiClient;
+        RMIClient rmiClient = c;
     }
     
     @Override

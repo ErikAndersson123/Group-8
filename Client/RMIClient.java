@@ -3,7 +3,7 @@ package Client;
 import java.rmi.RemoteException;
 import java.rmi.Naming;
 import Server.Subject;
-import Server.DataLogic;
+
 
 public class RMIClient {
     
@@ -19,7 +19,7 @@ public class RMIClient {
 
         try {
             // Connect to the RMI server
-            dataLogic = (Subject) Naming.lookup("rmi://192.168.32.3/Subject");
+            dataLogic = (Subject) Naming.lookup("rmi://192.168.1.3/Subject");
             clientLogic = new ClientLogic(dataLogic);
             
             System.out.println("Connected to RMI server.");
