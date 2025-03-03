@@ -1,4 +1,4 @@
-package Client;
+package client;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -7,18 +7,22 @@ import java.util.LinkedList;
 
 import javax.swing.*;
 
-import Server.Chatroom;
-import Server.User;
+import server.Chatroom;
+import server.User;
 
 public class ChatroomView extends JFrame {
     private static final long serialVersionUID = 1L;
     RMIClient rmiClient;
     public static User u;
-    private JList list;
+    private int currentRID = 0;
+    @SuppressWarnings("rawtypes")
+	private JList list;
     private int[] ch;
-    private DefaultListModel listModel;
+    @SuppressWarnings("rawtypes")
+	private DefaultListModel listModel;
     private PanelView pv;
-    public ChatroomView(User user, RMIClient rmiClient) throws Exception {
+    @SuppressWarnings({ "rawtypes", "unchecked"})
+	public ChatroomView(User user, RMIClient rmiClient) throws Exception {
         u = user;
         this.rmiClient = rmiClient;
         
@@ -31,8 +35,6 @@ public class ChatroomView extends JFrame {
             cr[index] = chatroom;
             index++;
         }
-        
-        //Chatroom[] cr = cl.getUserChatrooms(user);
         createArray(cr);
         setPreferredSize(new Dimension(800,600));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -48,10 +50,12 @@ public class ChatroomView extends JFrame {
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         list.setSelectedIndex(0);
         list.addListSelectionListener(e->{
+        	if(currentRID == (int)list.getSelectedValue())
+        		return;
             try {
                 remove(pv);
                 pv = new PanelView(600,600, (int)list.getSelectedValue(),cr[list.getSelectedIndex()], rmiClient);
-                
+                currentRID = (int)list.getSelectedValue();
                 add(pv);
                 invalidate();
                 validate();

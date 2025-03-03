@@ -1,40 +1,41 @@
-package Client;
+package client;
 
 import javax.swing.*;
 
-import Server.Message;
+import server.Message;
 
 import java.awt.*;
 import java.util.LinkedList;
 
 public class ChatWindow extends JPanel {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    public ChatWindow(LinkedList<Message> messages) {
-        
+	public ChatWindow(LinkedList<Message> messages) {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS)); // Vertical stacking
-
+        
         for (Message msg : messages) {
-            //System.out.println(msg.getText());
             add(createMessagePanel(msg)); // Add each message as a JPanel
         }
     }
-    public void ReloadChat(LinkedList<Message> messages) {
-        removeAll();
+	public void ReloadChat(LinkedList<Message> messages) {
+		removeAll();
         for (Message msg : messages) {
-            System.out.println(msg.getText());
             add(createMessagePanel(msg)); // Add each message as a JPanel
         }
-        
-        revalidate();
+        invalidate();
+        validate();
         repaint();
-        
     }
-    public void addOneMessage(Message message) {
-        add(createMessagePanel(message));
-    }
+	public void addOneMessage(Message message) {
+		add(createMessagePanel(message));
+		invalidate();
+        validate();
+        repaint();
+	}
     private JPanel createMessagePanel(Message msg) {
         JPanel messagePanel = new JPanel();
+        messagePanel.setMaximumSize(new Dimension(565,80));
+        messagePanel.setMinimumSize(new Dimension(565,45));
         messagePanel.setLayout(new BorderLayout());
         messagePanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
         
