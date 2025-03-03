@@ -33,4 +33,5 @@ public interface Subject extends Remote {
     public LinkedList<Chatroom> getChatrooms() throws RemoteException;
     public LinkedList<User> getUsers() throws RemoteException;
     public byte[] getImageFile(int messageID) throws RemoteException;
+    public Chatroom getChatroom(String chatroom) throws RemoteException;
 }

@@ -31,9 +31,6 @@ public class DataLogic extends UnicastRemoteObject implements Subject {
         dh.registerUser(user);
         user.setUserID(dh.getUserID(user));
         users.add(user);
-        for (Chatroom chatroom : chatrooms) {
-            addChatroomUser(user, chatroom);
-        }
         System.out.println("User created");
         notifySubscribers();
     }
@@ -115,23 +112,25 @@ public class DataLogic extends UnicastRemoteObject implements Subject {
     }
 
     public void addChatroomUser(User user, Chatroom chatroom) throws RemoteException {
-        dh.registerChatroomUser(user, chatroom);
+        
         for (Chatroom c : chatrooms) {
             if (c.getRoomID() == chatroom.getRoomID()) {
                 chatroom.addChatroomUser(user);
             }
         }
+        dh.registerChatroomUser(user, chatroom);
         System.out.println("User added to chatroom");
         notifySubscribers();
     }
 
     public void removeChatroomUser(User user, Chatroom chatroom) throws RemoteException {
-        dh.unregisterChatroomUser(user, chatroom);
+        
         for (Chatroom c : chatrooms) {
             if (c.getRoomID() == chatroom.getRoomID()) {
                 chatroom.removeChatroomUser(user);
             }
         }
+        dh.unregisterChatroomUser(user, chatroom);
         System.out.println("User removed from chatroom");
         notifySubscribers();
     }
@@ -222,6 +221,11 @@ public class DataLogic extends UnicastRemoteObject implements Subject {
         }
         System.out.println("User chatrooms sent");
         return list;
+    }
+
+    public Chatroom getChatroom(String chatroomName){
+        Chatroom chatroom = dh.getChatroom(chatroomName);
+        return chatroom;
     }
     
     

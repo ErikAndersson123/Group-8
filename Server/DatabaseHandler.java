@@ -87,9 +87,14 @@ public class DatabaseHandler {
             stmt.setInt(1, user.getUserID());
             stmt.setInt(2, chatroom.getRoomID());
             stmt.executeUpdate();
+            System.out.println(user.getUsername());
             return "{\"success\":true}";
+            
         } catch (SQLException e) {
+            System.out.println("fail chatroom " + user.getUsername());
+            System.out.println("fail chatroom " + chatroom.getName() + " " + chatroom.getRoomID());
             return "{\"success\":false, \"error\":\"" + getError(e) + "\"}";
+            
         }
     }
     
@@ -144,6 +149,30 @@ public class DatabaseHandler {
     
     
     
+    public Chatroom getChatroom(String chatroomName) {
+        String sql = "SELECT roomID, name FROM chatrooms WHERE name = ?";
+    
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, chatroomName);
+    
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    int roomID = rs.getInt("roomID");
+                    String name = rs.getString("name");
+    
+                    System.out.println("Chatroom found: " + name + " (ID: " + roomID + ")");
+    
+                    return new Chatroom(roomID, name);
+                } else {
+                    System.out.println("Chatroom not found: " + chatroomName);
+                    return null; 
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Database error in getChatroom: " + e.getMessage());
+            return null;
+        }
+    }
     
     
     
