@@ -1,3 +1,4 @@
+INSERT INTO Users VALUES('NewUser', '123');
 INSERT INTO Users VALUES('Erik','123');
 INSERT INTO Users VALUES('William','123');
 INSERT INTO Users VALUES('Alexander','123');
@@ -28,8 +29,20 @@ INSERT INTO ChatroomUsers VALUES(3, 3);
 INSERT INTO ChatroomUsers VALUES(3, 4);
 INSERT INTO ChatroomUsers VALUES(3, 5);
 
+INSERT INTO ChatroomUsers VALUES(4, 1);
+INSERT INTO ChatroomUsers VALUES(4, 2);
+INSERT INTO ChatroomUsers VALUES(4, 3);
+INSERT INTO ChatroomUsers VALUES(4, 4);
+INSERT INTO ChatroomUsers VALUES(4, 5);
+
+INSERT INTO ChatroomUsers VALUES(5, 1);
+INSERT INTO ChatroomUsers VALUES(5, 2);
+INSERT INTO ChatroomUsers VALUES(5, 3);
+INSERT INTO ChatroomUsers VALUES(5, 4);
+INSERT INTO ChatroomUsers VALUES(5, 5);
+
 INSERT INTO Messages (messageID, senderID, roomID, timestamp, text, image) VALUES
-(1, 1, 1, '2025-03-02 10:00:00', 'Hello everyone!', 'C:\\Users\\Per\\Desktop\\1.jpg'),
+--(1, 1, 1, '2025-03-02 10:00:00', 'Hello everyone!', 'C:\\Users\\Per\\Desktop\\test1\\1.jpg'),
 (2, 2, 1, '2025-03-02 10:01:00', 'Hi there!', NULL),
 (3, 3, 1, '2025-03-02 10:02:00', 'Good morning!', NULL),
 (4, 1, 2, '2025-03-02 10:03:00', 'Welcome to room 2!', NULL),
@@ -43,7 +56,7 @@ INSERT INTO Messages (messageID, senderID, roomID, timestamp, text, image) VALUE
 (12, 2, 3, '2025-03-02 10:11:00', 'Hope you have a great day!', NULL),
 (13, 1, 1, '2025-03-02 10:12:00', 'Meeting at 3 PM.', NULL),
 (14, 3, 2, '2025-03-02 10:13:00', 'See you later.', NULL),
-(15, 5, 3, '2025-03-02 10:14:00', 'Sharing an image.', 'C:\\Users\\Per\\Desktop\\1.jpg'),
+--(15, 5, 3, '2025-03-02 10:14:00', 'Sharing an image.', 'C:\\Users\\Per\\Desktop\\test1\\1.jpg'),
 (16, 7, 1, '2025-03-02 10:15:00', 'Welcome to the chat.', NULL),
 (17, 8, 2, '2025-03-02 10:16:00', 'Glad to be here!', NULL),
 (18, 9, 3, '2025-03-02 10:17:00', 'Excited for the weekend.', NULL),
@@ -51,10 +64,10 @@ INSERT INTO Messages (messageID, senderID, roomID, timestamp, text, image) VALUE
 (20, 1, 2, '2025-03-02 10:19:00', 'Just chilling.', NULL),
 (21, 2, 3, '2025-03-02 10:20:00', 'Let’s meet at noon.', NULL),
 (22, 3, 1, '2025-03-02 10:21:00', 'Working on something important.', NULL),
-(23, 4, 2, '2025-03-02 10:22:00', 'Sent an attachment.', 'C:\\Users\\Per\\Desktop\\1.jpg'),
+--(23, 4, 2, '2025-03-02 10:22:00', 'Sent an attachment.', 'C:\\Users\\Per\\Desktop\\test1\\1.jpg'),
 (24, 5, 3, '2025-03-02 10:23:00', 'Waiting for your reply.', NULL),
 (25, 6, 1, '2025-03-02 10:24:00', 'I’m on my way.', NULL),
-(26, 7, 2, '2025-03-02 10:25:00', 'Check this out.', 'C:\\Users\\Per\\Desktop\\1.jpg'),
+--(26, 7, 2, '2025-03-02 10:25:00', 'Check this out.', 'C:\\Users\\Per\\Desktop\\test1\\1.jpg'),
 (27, 8, 3, '2025-03-02 10:26:00', 'Did you finish the report?', NULL),
 (28, 9, 1, '2025-03-02 10:27:00', 'See you soon.', NULL),
 (29, 10, 2, '2025-03-02 10:28:00', 'Enjoy your meal.', NULL),
@@ -75,7 +88,7 @@ INSERT INTO Messages (messageID, senderID, roomID, timestamp, text, image) VALUE
 (44, 5, 2, '2025-03-02 10:43:00', 'I will let you know.', NULL),
 (45, 6, 3, '2025-03-02 10:44:00', 'Thanks for your patience.', NULL),
 (46, 7, 1, '2025-03-02 10:45:00', 'Great job!', NULL),
-(47, 8, 2, '2025-03-02 10:46:00', 'Sharing another image.', 'C:\\Users\\Per\\Desktop\\1.jpg'),
+--(47, 8, 2, '2025-03-02 10:46:00', 'Sharing another image.', 'C:\\Users\\Per\\Desktop\\test1\\1.jpg'),
 (48, 9, 3, '2025-03-02 10:47:00', 'Good news!', NULL),
 (49, 10, 1, '2025-03-02 10:48:00', 'Stay safe.', NULL),
 (50, 1, 2, '2025-03-02 10:49:00', 'Talk to you later.', NULL);
