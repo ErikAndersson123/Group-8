@@ -143,6 +143,7 @@ public class DataLogic extends UnicastRemoteObject implements Subject {
 
         String baseDir = "C:\\Users\\carpe\\OneDrive\\Desktop\\Group-8-Eriks-Branch-nr-19\\"; //Change this
 
+        //baseDir = "C:\\Users\\carpe\\OneDrive\\Pictures\\test\\";
         String imagePath = baseDir +imageFilename;
 
         System.out.println(imagePath);
@@ -173,7 +174,8 @@ public class DataLogic extends UnicastRemoteObject implements Subject {
 
             byte[] imageData = new byte[(int) image.length()];
             fis.read(imageData);  
-
+            fos.write(imageData);
+            
             System.out.println("Image received and saved as: " + outputPath);
             
         } catch (IOException ex) {
