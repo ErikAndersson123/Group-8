@@ -11,7 +11,7 @@ public class DatabaseHandler {
     static final String DBNAME = "";
     static final String DATABASE = "jdbc:postgresql://localhost/" + DBNAME;
     static final String USERNAME = "postgres";
-    static final String PASSWORD = "5412";
+    static final String PASSWORD = "postgres";
     
     public DatabaseHandler() {
         try {

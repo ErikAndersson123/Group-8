@@ -141,9 +141,8 @@ public class DataLogic extends UnicastRemoteObject implements Subject {
             return null;
         }
 
-        String baseDir = "C:\\Users\\carpe\\OneDrive\\Desktop\\Group-8-Eriks-Branch-nr-19\\"; //Change this
+        String baseDir = "C:\\Users\\Per\\Desktop\\Labb Objektorienterade Applikationer\\Labb Objektorienterade Applikationer v.17\\Labb Objektorienterade Applikationer v.17\\"; //Change this
 
-        //baseDir = "C:\\Users\\carpe\\OneDrive\\Pictures\\test\\";
         String imagePath = baseDir +imageFilename;
 
         System.out.println(imagePath);
@@ -163,6 +162,57 @@ public class DataLogic extends UnicastRemoteObject implements Subject {
             return null;
         }
     }
+    
+    public void uploadImage(File image){
+        String imageName = image.getName();
+        String outputPath = imageName;
+
+        try (FileInputStream fis = new FileInputStream(image);
+             FileOutputStream fos = new FileOutputStream(outputPath)) {
+
+            byte[] imageData = new byte[(int) image.length()];
+            fis.read(imageData);
+            fos.write(imageData);
+
+            System.out.println("Image received and saved as: " + outputPath);
+
+        } catch (IOException ex) {
+            System.out.println("Error processing image: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+    }
+
+    
+    
+    
+    /*
+
+    public void uploadImage(File image) {
+        String imageName = image.getName();
+        String outputPath = imageName;
+
+        try (FileInputStream fis = new FileInputStream(image);
+             FileOutputStream fos = new FileOutputStream(outputPath)) {
+
+            byte[] buffer = new byte[4096]; // Use a buffer to avoid memory issues
+            int bytesRead;
+
+            while ((bytesRead = fis.read(buffer)) != -1) {
+                fos.write(buffer, 0, bytesRead);
+            }
+
+            System.out.println("Image received and saved as: " + outputPath);
+
+        } catch (IOException ex) {
+            System.out.println("Error processing image: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+    }
+
+    
+    
+    
+    
 
 
     public void uploadImage(File image){
@@ -174,8 +224,7 @@ public class DataLogic extends UnicastRemoteObject implements Subject {
 
             byte[] imageData = new byte[(int) image.length()];
             fis.read(imageData);  
-            fos.write(imageData);
-            
+
             System.out.println("Image received and saved as: " + outputPath);
             
         } catch (IOException ex) {
@@ -184,7 +233,7 @@ public class DataLogic extends UnicastRemoteObject implements Subject {
         }
     }
     
-    
+    */
     
     
     
