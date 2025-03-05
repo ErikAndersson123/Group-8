@@ -34,11 +34,6 @@ public class PanelView extends JPanel {
         this.rmiClient = c;
         this.chatroom = chatroom;
         
-        
-                        
-        //this.chatroom.setChatHistory(rmiClient.getClientLogic().getChatHistory(chatroom));
-        //this.chatroom.setChatroomUsers(rmiClient.getClientLogic().getChatroomUsers(chatroom));
-        
 
             
         setLocation(0, 0);
@@ -47,11 +42,11 @@ public class PanelView extends JPanel {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 
-        JTextArea ta1 = new JTextArea(chatroom.getName());
-        ta1.setPreferredSize(new Dimension(150, 20));
+        JTextArea headerBar = new JTextArea(chatroom.getName());
+        headerBar.setPreferredSize(new Dimension(150, 20));
         
-        ta1.setEditable(false);
-        ta1.setBackground(Color.LIGHT_GRAY);
+        headerBar.setEditable(false);
+        headerBar.setBackground(Color.LIGHT_GRAY);
             
         ChatWindow chatPanel = new ChatWindow(rmiClient, user, chatroom);
         
@@ -101,13 +96,13 @@ public class PanelView extends JPanel {
 
 
         
-        JTextField t1 = new JTextField();
-        t1.setToolTipText("Type your message here");
-        t1.setPreferredSize(new Dimension(w - 200, 50));
+        JTextField MessageInput = new JTextField();
+        MessageInput.setToolTipText("Type your message here");
+        MessageInput.setPreferredSize(new Dimension(w - 200, 50));
         
-        t1.setFont(new Font("Arial",10,20));
-        t1.addActionListener(e->{
-            if (t1.getText().length() < 1) return;
+        MessageInput.setFont(new Font("Arial",10,20));
+        MessageInput.addActionListener(e->{
+            if (MessageInput.getText().length() < 1) return;
             Timestamp time =  new Timestamp(System.currentTimeMillis());
             try {
                 
@@ -117,55 +112,40 @@ public class PanelView extends JPanel {
 
                     String image = null;
                     if (selectedFile != null) {
-                        rmiClient.getClientLogic().uploadImage(selectedFile);
-                        //System.out.println("selectedFile is not null: " + selectedFile.getName());
+                        rmiClient.getClientLogic().uploadImage(selectedFile);                     
                         image = selectedFile.getName();
-
-                        //System.out.println(image);
-
                         selectedFile = null;
                         uploadImage.setBackground(Color.cyan);
                         uploadImage.setText("Upload Image");
                         
                     }
                                                             
-                    Message o = new Message(ChatroomView.u.getUserID(), chatroom.getRoomID(), time, t1.getText(), image);
+                    Message o = new Message(ChatroomView.u.getUserID(), chatroom.getRoomID(), time, MessageInput.getText(), image);
                     
 
-                    // Call the database interaction method (createMessage)
-                    rmiClient.getClientLogic().createMessage(o);  // This is where the database call happens
+                    
+                    rmiClient.getClientLogic().createMessage(o);  
 
-                    // After the database operation, update the UI on the EDT
-                    chatPanel.addOneMessage(o);  // Update the chat window with the new message
+                    chatPanel.addOneMessage(o);  
                 }
 
             } catch (Exception e1) {
                 e1.printStackTrace();
                 }
-                    t1.setText("");
+                    MessageInput.setText("");
         });
 
 
-
-        
-        
-        
-
-
-
-        add(ta1);
+        add(headerBar);
         add(chatScroll);
 
-        messagPanel.add(t1);
+        messagPanel.add(MessageInput);
         messagPanel.add(uploadImage);
 
 
         add(messagPanel);
         
-        
-        
-        //setLayout(new FlowLayout());
-        revalidate(); // Refresh panel
+        revalidate(); 
         repaint();
     }
 }

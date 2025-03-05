@@ -2,10 +2,10 @@ package Client;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.LinkedList;
+
 import javax.swing.*;
 import Server.Chatroom;
-import Server.Message;
+
 
 public class ChatroomController extends UnicastRemoteObject implements Observer {
     
@@ -26,7 +26,7 @@ public class ChatroomController extends UnicastRemoteObject implements Observer 
 
             System.out.println("Received update");
                 
-                //LinkedList<Message> chatHistory = rmiClient.getClientLogic().getChatHistory(chatroom);
+            
         
             SwingUtilities.invokeLater(() -> {
                 try
@@ -36,7 +36,7 @@ public class ChatroomController extends UnicastRemoteObject implements Observer 
                 catch (Exception e)
                 {
                     e.printStackTrace();
-                } // This updates the UI
+                } 
             });
         
     }

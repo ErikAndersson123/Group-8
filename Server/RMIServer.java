@@ -1,9 +1,5 @@
 package Server;
 
-//import Client.Observer;
-//import Client.UserInfoController;
-//import Client.ChatroomController;
-
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
 

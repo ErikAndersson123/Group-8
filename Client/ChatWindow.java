@@ -1,7 +1,7 @@
 package Client;
 
 import javax.swing.*;
-import java.rmi.RemoteException;
+
 
 import Server.Message;
 import Server.User;
@@ -12,7 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import java.io.FileOutputStream;
-import java.util.LinkedList;
+
 
 public class ChatWindow extends JPanel {
     private static final long serialVersionUID = 1L;
@@ -37,7 +37,7 @@ public class ChatWindow extends JPanel {
         if (rmiClient.getClientLogic().inChatroom(user, chatroom)) {
             for (Message msg : rmiClient.getClientLogic().getChatHistory(chatroom)) {
                 //System.out.println(msg.getText());
-                add(createMessagePanel(msg)); // Add each message as a JPanel
+                add(createMessagePanel(msg)); 
             }
         }
     }
@@ -54,8 +54,7 @@ public class ChatWindow extends JPanel {
             
             //removeAll();
             for (Message msg : rmiClient.getClientLogic().getChatHistory(chatroom)) {
-                //System.out.println(msg.getText());
-                add(createMessagePanel(msg)); // Add each message as a JPanel
+                add(createMessagePanel(msg)); 
             }
         
             revalidate();
@@ -83,20 +82,6 @@ public class ChatWindow extends JPanel {
         messagePanel.setMinimumSize(new Dimension(565, 80));
 
         String messageInfo = rmiClient.getClientLogic().messageInfo(msg);
-        
-        
-        
-        
-        /*
-        String username = "Unknown";
-        for (User u : rmiClient.getClientLogic().getUsers()) {
-            if (u.getUserID() == msg.getSenderID()) {
-                username = user.getUsername();
-                break;
-            }
-        }
-        */
-       
         
         JLabel senderLabel = new JLabel(messageInfo + ":");
         JTextArea textLabel = new JTextArea(msg.getText());

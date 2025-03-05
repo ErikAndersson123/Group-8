@@ -277,7 +277,7 @@ public class DatabaseHandler {
 
             if (rs.next()) {
                 imagePath = rs.getString("image");
-                System.out.println("Retrieved Image Path: " + imagePath); // Debug Output
+                //System.out.println("Retrieved Image Path: " + imagePath);
             }
         } catch (Exception e) {
             e.printStackTrace();

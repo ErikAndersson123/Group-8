@@ -78,7 +78,7 @@ public class DataLogic extends UnicastRemoteObject implements Subject {
                 message.setMessageID(dh.nextAvailableMessageID(c));
                 dh.addMessage(message);
                 c.addMessage(message);
-                //c.setChatHistory(dh.getAllMessages(c));
+                
             }
         }
         System.out.println("Message created");
@@ -90,7 +90,7 @@ public class DataLogic extends UnicastRemoteObject implements Subject {
             if (c.getRoomID() == message.getRoomID()) {
                 dh.removeMessage(message);
                 c.removeMessage(message);
-                //c.setChatHistory(dh.getAllMessages(c));
+                
             }
         }
         System.out.println("Message deleted");
@@ -101,8 +101,7 @@ public class DataLogic extends UnicastRemoteObject implements Subject {
         dh.registerChatroomUser(user, chatroom);
         for (Chatroom c : chatrooms) {
             if (c.getRoomID() == chatroom.getRoomID()) {
-                System.out.println("Hallå hallå");
-                //c.addChatroomUser(user);
+                
                 c.setChatroomUsers(dh.getAllChatroomUsers(chatroom));
             }
         }
@@ -114,8 +113,8 @@ public class DataLogic extends UnicastRemoteObject implements Subject {
         dh.unregisterChatroomUser(user, chatroom);
         for (Chatroom c : chatrooms) {
             if (c.getRoomID() == chatroom.getRoomID()) {
-                System.out.println("Hallå hallå hallååååååååå");
-                //c.removeChatroomUser(user);
+                
+                
                 c.setChatroomUsers(dh.getAllChatroomUsers(chatroom));
             }
         }
@@ -142,7 +141,8 @@ public class DataLogic extends UnicastRemoteObject implements Subject {
             return null;
         }
 
-        String baseDir = "C:\\Users\\carpe\\OneDrive\\Desktop\\Group-8-Eriks-Branch-nr-19\\";
+        String baseDir = "C:\\Users\\carpe\\OneDrive\\Desktop\\Group-8-Eriks-Branch-nr-19\\"; //Change this
+
         String imagePath = baseDir +imageFilename;
 
         System.out.println(imagePath);
@@ -172,8 +172,7 @@ public class DataLogic extends UnicastRemoteObject implements Subject {
              FileOutputStream fos = new FileOutputStream(outputPath)) {
 
             byte[] imageData = new byte[(int) image.length()];
-            fis.read(imageData);  // Read image into byte array
-            fos.write(imageData); // Save to new file
+            fis.read(imageData);  
 
             System.out.println("Image received and saved as: " + outputPath);
             
@@ -211,19 +210,6 @@ public class DataLogic extends UnicastRemoteObject implements Subject {
             }
         }
         return "Deleted User";
-        /*
-        LinkedList<String> messageInfo = new LinkedList<String>();
-        
-        for (User user : users) {
-            if (user.getUserID() == message.getSenderID()) {
-                messageInfo += user.getUsername() + ": " + message.getText());
-            }
-            else {
-                messageInfo.add("Deleted User: " + message.getText());
-            }
-        }
-        System.out.println("Message Info sent");
-        return messageInfo;*/
     }
     
     public LinkedList<User> chatroomUsers(Chatroom chatroom) throws RemoteException{

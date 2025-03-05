@@ -25,7 +25,7 @@ public class UserLoginView extends JFrame {
     char ogEcho;
     public static void main(String[] args) throws RemoteException {
         rmiClient = new RMIClient();
-        UserLoginView d = new UserLoginView();
+        new UserLoginView();
     }
     
     @SuppressWarnings("deprecation")
