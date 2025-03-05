@@ -2,9 +2,9 @@ package Client;
 
 import java.awt.Color;
 import java.awt.Dimension;
-
+import java.awt.FlowLayout;
 import java.awt.Font;
-
+import java.io.File;
 import java.sql.Timestamp;
 import javax.swing.*;
 
@@ -17,7 +17,7 @@ public class PanelView extends JPanel {
     
     private RMIClient rmiClient;
     private Chatroom chatroom;
-
+    private File selectedFile = null;
 
     public PanelView(int w, int h, RMIClient c) throws Exception {
     
@@ -69,9 +69,41 @@ public class PanelView extends JPanel {
             
         chatScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         
+        JPanel messagPanel = new JPanel();
+        messagPanel.setBackground(Color.lightGray);
+        messagPanel.setLayout(new FlowLayout());
+
+
+        
+
+        JButton uploadImage = new JButton("Upload Image");
+        uploadImage.setBackground(Color.cyan);
+        uploadImage.addActionListener(e -> {
+            if(selectedFile == null){
+                JFileChooser fileChooser = new JFileChooser();
+                int returnValue = fileChooser.showOpenDialog(null);
+                if (returnValue == JFileChooser.APPROVE_OPTION) {
+                    selectedFile = fileChooser.getSelectedFile();
+                    System.out.println("Selected file: " + selectedFile.getName());
+                    uploadImage.setBackground(Color.GREEN);
+                    uploadImage.setText("Image Uploaded!");
+                }
+            }else{
+                selectedFile = null;
+                uploadImage.setBackground(Color.cyan);
+                uploadImage.setText("Upload Image");
+                
+            }
+            
+           
+        });
+    
+
+
+        
         JTextField t1 = new JTextField();
         t1.setToolTipText("Type your message here");
-        t1.setPreferredSize(new Dimension(w - 50, 50));
+        t1.setPreferredSize(new Dimension(w - 200, 50));
         
         t1.setFont(new Font("Arial",10,20));
         t1.addActionListener(e->{
@@ -82,9 +114,23 @@ public class PanelView extends JPanel {
                 
                 
                 if(rmiClient.getClientLogic().inChatroom(user, chatroom)) {
+
+                    String image = null;
+                    if (selectedFile != null) {
+                        rmiClient.getClientLogic().uploadImage(selectedFile);
+                        //System.out.println("selectedFile is not null: " + selectedFile.getName());
+                        image = selectedFile.getName();
+
+                        //System.out.println(image);
+
+                        selectedFile = null;
+                        uploadImage.setBackground(Color.cyan);
+                        uploadImage.setText("Upload Image");
+                        
+                    }
                                                             
-                    Message o = new Message(ChatroomView.u.getUserID(), chatroom.getRoomID(), time, t1.getText(), null);
-                
+                    Message o = new Message(ChatroomView.u.getUserID(), chatroom.getRoomID(), time, t1.getText(), image);
+                    
 
                     // Call the database interaction method (createMessage)
                     rmiClient.getClientLogic().createMessage(o);  // This is where the database call happens
@@ -107,12 +153,17 @@ public class PanelView extends JPanel {
 
 
 
-
-
         add(ta1);
         add(chatScroll);
+
+        messagPanel.add(t1);
+        messagPanel.add(uploadImage);
+
+
+        add(messagPanel);
         
-        add(t1);
+        
+        
         //setLayout(new FlowLayout());
         revalidate(); // Refresh panel
         repaint();

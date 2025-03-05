@@ -5,6 +5,7 @@ import Server.Chatroom;
 import Server.User;
 import Server.Message;
 import java.util.LinkedList;
+import java.io.File;
 import java.sql.Timestamp;
 
 public class ClientLogic {
@@ -123,8 +124,12 @@ public class ClientLogic {
         return dataLogic.inChatroom(user, chatroom);
     }
 
-    public byte[] getImageFile(int messageId) throws Exception{
-        return dataLogic.getImageFile(messageId);
+    public byte[] getImageFile(Message msg) throws Exception{
+        return dataLogic.getImageFile(msg);
+    }
+
+    public void uploadImage(File image) throws Exception{
+        dataLogic.uploadImage(image);
     }
 
     public void pause() throws Exception {

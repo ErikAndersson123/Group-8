@@ -2,6 +2,7 @@ package Server;
 
 import Client.Observer;
 
+import java.io.File;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.*;
@@ -33,5 +34,6 @@ public interface Subject extends Remote {
     void notifySubscribers() throws RemoteException;
     public LinkedList<Chatroom> getChatrooms() throws RemoteException;
     public LinkedList<User> getUsers() throws RemoteException;
-    public byte[] getImageFile(int messageID) throws RemoteException;
+    public byte[] getImageFile(Message msg) throws RemoteException;
+    public void uploadImage(File image) throws RemoteException;
 }

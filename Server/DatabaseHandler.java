@@ -11,7 +11,7 @@ public class DatabaseHandler {
     static final String DBNAME = "";
     static final String DATABASE = "jdbc:postgresql://localhost/" + DBNAME;
     static final String USERNAME = "postgres";
-    static final String PASSWORD = "postgres";
+    static final String PASSWORD = "5412";
     
     public DatabaseHandler() {
         try {
@@ -265,13 +265,14 @@ public class DatabaseHandler {
         return nextMessageID;
     }
 
-    public String getImagePath(int messageId) {
-        String sql = "SELECT image FROM messages WHERE messageID = ?";
+    public String getImagePath(Message msg) {
+        String sql = "SELECT image FROM messages WHERE messageID = ? AND roomID = ?";
         String imagePath = null;
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setInt(1, messageId);
+            pstmt.setInt(1, msg.getMessageID());
+            pstmt.setInt(2, msg.getRoomID());
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {

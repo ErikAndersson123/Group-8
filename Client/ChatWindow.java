@@ -49,12 +49,12 @@ public class ChatWindow extends JPanel {
         
         if (rmiClient.getClientLogic().inChatroom(user, chatroom)) {
             
-            System.out.println("flndfglndglnfdlgn");
+            
             
             
             //removeAll();
             for (Message msg : rmiClient.getClientLogic().getChatHistory(chatroom)) {
-                System.out.println(msg.getText());
+                //System.out.println(msg.getText());
                 add(createMessagePanel(msg)); // Add each message as a JPanel
             }
         
@@ -113,7 +113,7 @@ public class ChatWindow extends JPanel {
             LoadImageButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     try {
-                        byte[] imageData = rmiClient.getClientLogic().getImageFile(msg.getMessageID()); 
+                        byte[] imageData = rmiClient.getClientLogic().getImageFile(msg); 
                         if (imageData != null) {
                             String outputPath = "received_image_" + msg.getMessageID() + ".jpg";
                             try (FileOutputStream fos = new FileOutputStream(outputPath)) {
