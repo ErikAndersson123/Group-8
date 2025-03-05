@@ -11,11 +11,12 @@ import javax.swing.*;
 
 import Server.Chatroom;
 import Server.User;
+import Server.Message;
 
 public class ChatroomView extends JFrame {
     private static final long serialVersionUID = 1L;
-    RMIClient rmiClient;
-    public static User u;
+    private RMIClient rmiClient;
+    private static User u;
     private JList<String> list;
     private int[] ch;
     private DefaultListModel<String> listModel;
@@ -35,7 +36,6 @@ public class ChatroomView extends JFrame {
         listModel = new DefaultListModel<>();
 
         for (Chatroom chatroom : Chatrooms) {
-            
             cr[index] = chatroom;
             index++;
             listModel.addElement(chatroom.getName());
@@ -54,6 +54,13 @@ public class ChatroomView extends JFrame {
         list = new JList<>(listModel);
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         list.setSelectedIndex(0);
+        
+
+
+        
+        
+        
+        
         list.addListSelectionListener(e->{
             if (currentRID.equals((String) list.getSelectedValue())) {
                 return;
@@ -80,6 +87,8 @@ public class ChatroomView extends JFrame {
                 e1.printStackTrace();
             }
         });
+        
+        
         list.setVisibleRowCount(8);
         list.setPreferredSize(new Dimension(100, 100));
         JScrollPane listScroll = new JScrollPane(list);
@@ -127,6 +136,7 @@ public class ChatroomView extends JFrame {
                         rmiClient.getClientLogic().removeChatroomUser(u, selected);
                         JOptionPane.showMessageDialog(null, "You have left the chatroom.");
                         remove(pv); 
+                        
                         invalidate();
                         validate();
                         repaint();
@@ -164,27 +174,37 @@ public class ChatroomView extends JFrame {
         createButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String name = JOptionPane.showInputDialog("New Chatroom");
-                String output = name + " Created!";
-                JOptionPane.showMessageDialog(null, output);
-                if (name != null) {
-                    try {
-                        Chatroom chat = new Chatroom(name);
-                        rmiClient.getClientLogic().createChatroom(chat);
-                        chat.setRoomID(rmiClient.getClientLogic().getRoomID(chat));
-                        listModel.addElement(chat.getName());
-                        
-                        //Chatroom newChatroom = new Chatroom(name);
-                        //rmiClient.getClientLogic().createChatroom(newChatroom);
-                        //Chatroom chat = rmiClient.getClientLogic().getChatroom(newChatroom.getName());
-                        
-                        //listModel.addElement(newChatroom.getName());
-                        
-                        JOptionPane.showMessageDialog(null, "Chatroom Created succesfully!");
 
-                        rmiClient.getClientLogic().addChatroomUser(u, chat);
+                if (name != null && !name.trim().isEmpty()) { // Prevent empty chatroom names
+                try {
+                    Chatroom chat = new Chatroom(name);
+                    rmiClient.getClientLogic().createChatroom(chat);
+                    chat.setRoomID(rmiClient.getClientLogic().getRoomID(chat));
+    
+                    listModel.addElement(chat.getName());
+    
+                    JOptionPane.showMessageDialog(null, "Chatroom Created Successfully!");
 
-                        revalidate();
-                        repaint();
+
+
+                    rmiClient.getClientLogic().addChatroomUser(u, chat);
+
+ 
+                    selected = chat;
+                    currentRID = chat.getName();
+                    System.out.println("Switched to newly created chatroom: " + selected.getName());
+
+                    if (pv != null) {
+                        remove(pv);
+                    }
+
+                    pv = new PanelView(600, 600, selected, rmiClient, u);
+                    add(pv, BorderLayout.CENTER);
+
+                    list.setSelectedValue(chat.getName(), true);
+
+                    revalidate();
+                    repaint();
                     } catch (Exception ex) {
                         ex.printStackTrace();
                         JOptionPane.showMessageDialog(null, "Error creating the chatroom.");
@@ -192,9 +212,7 @@ public class ChatroomView extends JFrame {
                 }
             }
         });
-        
 
-        
         setLayout(new BorderLayout());
 
         pa.setLayout(new BorderLayout());

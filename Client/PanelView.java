@@ -28,7 +28,7 @@ public class PanelView extends JPanel {
             
             add(ta1);
             setLayout(null);
-    }
+    }   
     
     public PanelView(int w, int h, Chatroom chatroom, RMIClient c, User user) throws Exception {
         this.rmiClient = c;
@@ -120,7 +120,7 @@ public class PanelView extends JPanel {
                         
                     }
                                                             
-                    Message o = new Message(ChatroomView.u.getUserID(), chatroom.getRoomID(), time, MessageInput.getText(), image);
+                    Message o = new Message(c.getClientLogic().getUserID(user), chatroom.getRoomID(), time, MessageInput.getText(), image);
                     
 
                     

@@ -125,7 +125,7 @@ public class ChatWindow extends JPanel {
 
     public static void showImage(String imagePath) {
         JFrame frame = new JFrame("Received Image");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(500, 500);
 
         ImageIcon imageIcon = new ImageIcon(imagePath);
