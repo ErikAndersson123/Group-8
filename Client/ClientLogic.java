@@ -15,43 +15,6 @@ public class ClientLogic {
     public ClientLogic(Subject dataLogic) {
         this.dataLogic = dataLogic;
     }
-
-    public void test() throws Exception {
-        
-        User user1 = new User("Pelle", "123");
-        User user2 = new User("Kalle", "123");
-        
-        createUser(user1);
-        createUser(user2);
-
-        authenticateUser(user1);
-        
-        Chatroom chatroom = new Chatroom("Chat6");
-
-        createChatroom(chatroom);
-
-        addChatroomUser(user1, chatroom);
-        addChatroomUser(user2, chatroom);
-
-        createMessage(new Message(user1.getUserID(), chatroom.getRoomID(), getCurrentTimestamp(), "Hej", null));
-        createMessage(new Message(user2.getUserID(), chatroom.getRoomID(), getCurrentTimestamp(), "Hej", null));
-
-        pause();
-
-        getChatroomUsers(chatroom);
-        getUserChatrooms(user1);
-        getChatHistory(chatroom);
-
-        pause();
-
-        deleteUser(user1);
-        deleteUser(user2);
-
-        pause();
-
-        deleteChatroom(chatroom);
-    }
-
     public void createUser(User user) throws Exception {
         dataLogic.createUser(user);
     }
@@ -127,16 +90,16 @@ public class ClientLogic {
     public byte[] getImageFile(Message msg) throws Exception{
         return dataLogic.getImageFile(msg);
     }
-
-    public void uploadImage(File image) throws Exception{
-        dataLogic.uploadImage(image);
+    public void uploadImage(File image, int roomID) throws Exception{
+        dataLogic.uploadImage(image, roomID);
     }
-
-    public void pause() throws Exception {
-        System.out.println("PRESS ENTER");
-        while (System.in.read() != '\n');
-    }
+    
     public Timestamp getCurrentTimestamp() {
         return new Timestamp(System.currentTimeMillis());
     }
+    
+    public int nextAvailableMessageID(Chatroom chatroom) throws Exception {
+        return dataLogic.nextAvailableMessageID(chatroom);
+    }
+
 }

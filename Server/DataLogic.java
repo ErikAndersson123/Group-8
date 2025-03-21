@@ -50,7 +50,6 @@ public class DataLogic extends UnicastRemoteObject implements Subject {
         chatroomHandler.deleteChatroom(chatroom);
         notifySubscribers();
     }
-
     public void createMessage(Message message) throws RemoteException {
         chatroomHandler.createMessage(message);
         notifySubscribers();
@@ -75,8 +74,8 @@ public class DataLogic extends UnicastRemoteObject implements Subject {
         return messageHandler.getImageFile(message);
     }
     
-    public void uploadImage(File image){
-        messageHandler.uploadImage(image);
+    public void uploadImage(File image, int roomID){
+        messageHandler.uploadImage(image, roomID);
     }
 
     public LinkedList<Message> chatHistory(Chatroom chatroom) throws RemoteException{
@@ -113,6 +112,10 @@ public class DataLogic extends UnicastRemoteObject implements Subject {
     
     public LinkedList<Chatroom> getChatrooms() {
         return databaseHandler.getAllChatrooms();
+    }
+    
+    public int nextAvailableMessageID(Chatroom chatroom) throws RemoteException {
+        return databaseHandler.nextAvailableMessageID(chatroom);
     }
     
     public void addSubscriber(Observer observer) throws RemoteException {

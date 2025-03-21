@@ -23,6 +23,7 @@ public class ChatroomHandler {
     
     public void createChatroom(Chatroom chatroom) {
         chatroom.setRoomID(databaseHandler.nextAvailableRoomID());
+        System.out.println(chatroom.getName() + " " + chatroom.getRoomID());
         databaseHandler.registerChatroom(chatroom);
         chatrooms.add(chatroom);
         System.out.println("Chatroom created");
@@ -140,4 +141,4 @@ public class ChatroomHandler {
             chatroom.setChatroomUsers(chatroomUsers);
         }
     }
-}
+} 

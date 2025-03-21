@@ -9,7 +9,6 @@ import java.util.*;
 
 
 public interface Subject extends Remote {
-    
     public void createUser(User user) throws RemoteException;
     public void deleteUser(User user) throws RemoteException;
     public boolean authenticateUser(User user) throws RemoteException;
@@ -26,14 +25,12 @@ public interface Subject extends Remote {
     public int getUserID(User user) throws RemoteException;
     public int getRoomID(Chatroom chatroom) throws RemoteException;
     public boolean inChatroom(User user, Chatroom chatroom) throws RemoteException;
-    
-    
-    
-    void addSubscriber(Observer observer) throws RemoteException;
-    void removeSubscriber(Observer observer) throws RemoteException;
-    void notifySubscribers() throws RemoteException;
     public LinkedList<Chatroom> getChatrooms() throws RemoteException;
     public LinkedList<User> getUsers() throws RemoteException;
     public byte[] getImageFile(Message msg) throws RemoteException;
-    public void uploadImage(File image) throws RemoteException;
+    public void uploadImage(File image, int roomID) throws RemoteException;
+    public int nextAvailableMessageID(Chatroom chatroom) throws RemoteException;
+    void addSubscriber(Observer observer) throws RemoteException;
+    void removeSubscriber(Observer observer) throws RemoteException;
+    void notifySubscribers() throws RemoteException;
 }

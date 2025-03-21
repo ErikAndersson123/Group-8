@@ -3,6 +3,7 @@ package Server;
 import java.sql.*;
 import java.util.Properties;
 import java.util.LinkedList;
+import java.util.Collections;
 
 public class DatabaseHandler {
     
@@ -138,20 +139,7 @@ public class DatabaseHandler {
             return "{\"success\":false, \"error\":\"" + getError(e) + "\"}";
         }
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+ 
     public int getUserID(User user) {
         String sql = "SELECT userID FROM Users WHERE username = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -185,65 +173,28 @@ public class DatabaseHandler {
             return -1;
         }
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-
+  
     public int nextAvailableRoomID() {
-        LinkedList<Integer> roomIDs = new LinkedList<>();
-        String sql = "SELECT roomID FROM Chatrooms";
-    
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            try (ResultSet rs= stmt.executeQuery()) {
-                while (rs.next()) {
-                    int roomID = rs.getInt("roomID");
-                    roomIDs.add(roomID);
-                }
+        String sql = "SELECT MAX(roomID) AS max_id FROM Chatrooms";
+        try (PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                int maxId = rs.getInt("max_id");
+                return maxId + 1;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        int nextRoomID = 1;
-        int index = 0;
-        
-        while (index < roomIDs.size() && roomIDs.get(index) == nextRoomID) {
-            nextRoomID++;
-            index++;
-        }
-    
-        return nextRoomID;
+        // If there are no existing rooms, start with ID 1
+        return 1;
     }
-    
+
     public int nextAvailableMessageID(Chatroom chatroom) {
         LinkedList<Integer> messageIDs = new LinkedList<>();
         String sql = "SELECT messageID FROM Messages WHERE roomID = ?";
     
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            
             stmt.setInt(1, chatroom.getRoomID());
-
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     int messageID = rs.getInt("messageID");
@@ -253,15 +204,19 @@ public class DatabaseHandler {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        
+    
+        Collections.sort(messageIDs);
+
         int nextMessageID = 1;
-        int index = 0;
-        
-        while (index < messageIDs.size() && messageIDs.get(index) == nextMessageID) {
-            nextMessageID++;
-            index++;
+        for (int id : messageIDs) {
+            if (id == nextMessageID) {
+                nextMessageID++;
+            } else {
+                break;
+            }
         }
-        
+
+        System.out.println("Next available message ID: " + nextMessageID);
         return nextMessageID;
     }
 
@@ -277,31 +232,12 @@ public class DatabaseHandler {
 
             if (rs.next()) {
                 imagePath = rs.getString("image");
-                //System.out.println("Retrieved Image Path: " + imagePath);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return imagePath;
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     public LinkedList<User> getAllUsers() {
         LinkedList<User> users = new LinkedList<>();
@@ -395,26 +331,6 @@ public class DatabaseHandler {
 
         return users;
     }
-
-
-    
-
-
-
-
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-
-    
     public static String getError(SQLException e) {
         String message = e.getMessage();
         int ix = message.indexOf('\n');

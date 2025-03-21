@@ -5,6 +5,8 @@ INSERT INTO Users VALUES('Alexander','123');
 INSERT INTO Users VALUES('Anton','123');
 INSERT INTO Users VALUES('Gabriel','123');
 
+--INSERT INTO Chatrooms VALUES(0, 'Chat0');
+
 INSERT INTO Chatrooms VALUES(1, 'Chat1');
 INSERT INTO Chatrooms VALUES(2, 'Chat2');
 INSERT INTO Chatrooms VALUES(3, 'Chat3');
@@ -16,7 +18,7 @@ INSERT INTO ChatroomUsers VALUES(1, 2);
 INSERT INTO ChatroomUsers VALUES(1, 3);
 INSERT INTO ChatroomUsers VALUES(1, 4);
 INSERT INTO ChatroomUsers VALUES(1, 5);
-
+ 
 INSERT INTO ChatroomUsers VALUES(2, 1);
 INSERT INTO ChatroomUsers VALUES(2, 2);
 INSERT INTO ChatroomUsers VALUES(2, 3);
