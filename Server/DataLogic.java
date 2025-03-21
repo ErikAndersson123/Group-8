@@ -50,7 +50,6 @@ public class DataLogic extends UnicastRemoteObject implements Subject {
         chatroomHandler.deleteChatroom(chatroom);
         notifySubscribers();
     }
-    
     public void createMessage(Message message) throws RemoteException {
         chatroomHandler.createMessage(message);
         notifySubscribers();

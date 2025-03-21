@@ -1,5 +1,3 @@
-
-
 -- This file is used to run your whole database setup. It will:
 -- * Delete the whole database (!)
 -- * Run files that create tables, insert data, create views, and later create triggers.
@@ -43,13 +41,7 @@ SELECT userID, username, password FROM Users;
 SELECT * FROM Chatrooms;
 
 SELECT * FROM Messages;
-
 SELECT * FROM ChatroomUsers;
-
-
-
-
-
 
 /*
 

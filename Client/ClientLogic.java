@@ -15,7 +15,6 @@ public class ClientLogic {
     public ClientLogic(Subject dataLogic) {
         this.dataLogic = dataLogic;
     }
-
     public void createUser(User user) throws Exception {
         dataLogic.createUser(user);
     }
@@ -91,7 +90,6 @@ public class ClientLogic {
     public byte[] getImageFile(Message msg) throws Exception{
         return dataLogic.getImageFile(msg);
     }
-
     public void uploadImage(File image, int roomID) throws Exception{
         dataLogic.uploadImage(image, roomID);
     }
@@ -103,4 +101,5 @@ public class ClientLogic {
     public int nextAvailableMessageID(Chatroom chatroom) throws Exception {
         return dataLogic.nextAvailableMessageID(chatroom);
     }
+
 }

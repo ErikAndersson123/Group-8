@@ -1,3 +1,4 @@
+
 package Client;
 
 import javax.swing.*;
@@ -107,3 +108,4 @@ public class UserLoginView extends JFrame {
         setTitle(title);
     }
 }
+

@@ -24,7 +24,6 @@ public class MessageHandler {
             System.out.println("Image file not found at: " + imagePath);
             return null;
         }
-
         try (FileInputStream fis = new FileInputStream(file)) {
             byte[] fileData = new byte[(int) file.length()];
             fis.read(fileData);
@@ -44,13 +43,10 @@ public class MessageHandler {
 
         try (FileInputStream fis = new FileInputStream(image);
              FileOutputStream fos = new FileOutputStream(outputFile)) {
-
             byte[] imageData = new byte[(int) image.length()];
             fis.read(imageData);
             fos.write(imageData);
-
             System.out.println("Image received and saved as: " + outputFile.getAbsolutePath());
-
         } catch (IOException ex) {
             System.out.println("Error processing image: " + ex.getMessage());
             ex.printStackTrace();

@@ -5,7 +5,6 @@ import java.util.Properties;
 import java.util.LinkedList;
 import java.util.Collections;
 
-
 public class DatabaseHandler {
     
     private Connection conn;
@@ -140,7 +139,7 @@ public class DatabaseHandler {
             return "{\"success\":false, \"error\":\"" + getError(e) + "\"}";
         }
     }
-    
+ 
     public int getUserID(User user) {
         String sql = "SELECT userID FROM Users WHERE username = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -174,7 +173,7 @@ public class DatabaseHandler {
             return -1;
         }
     }
-    
+  
     public int nextAvailableRoomID() {
         String sql = "SELECT MAX(roomID) AS max_id FROM Chatrooms";
         try (PreparedStatement stmt = conn.prepareStatement(sql);
@@ -190,35 +189,6 @@ public class DatabaseHandler {
         return 1;
     }
 
-    /*
-    public int nextAvailableRoomID() {
-        LinkedList<Integer> roomIDs = new LinkedList<>();
-        String sql = "SELECT roomID FROM Chatrooms";
-    
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            try (ResultSet rs= stmt.executeQuery()) {
-                while (rs.next()) {
-                    int roomID = rs.getInt("roomID");
-                    roomIDs.add(roomID);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        int nextRoomID = 1;
-        int index = 0;
-        
-        while (index < roomIDs.size() && roomIDs.get(index) == nextRoomID) {
-            nextRoomID++;
-            index++;
-        }
-    
-        return nextRoomID;
-    }
-    */
-    
     public int nextAvailableMessageID(Chatroom chatroom) {
         LinkedList<Integer> messageIDs = new LinkedList<>();
         String sql = "SELECT messageID FROM Messages WHERE roomID = ?";
@@ -268,24 +238,6 @@ public class DatabaseHandler {
         }
         return imagePath;
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     public LinkedList<User> getAllUsers() {
         LinkedList<User> users = new LinkedList<>();
@@ -361,9 +313,9 @@ public class DatabaseHandler {
         String sql = "SELECT userID, username, password FROM ChatroomUsers LEFT JOIN Users USING (userID) WHERE roomID = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) { 
-            stmt.setInt(1, chatroom.getRoomID());
+            stmt.setInt(1, chatroom.getRoomID()); // Set parameter correctly before executing query
 
-            try (ResultSet rs = stmt.executeQuery()) {
+            try (ResultSet rs = stmt.executeQuery()) { // Execute query in a separate try block
                 while (rs.next()) {
                     int userID = rs.getInt("userID");
                     String username = rs.getString("username");
@@ -379,26 +331,6 @@ public class DatabaseHandler {
 
         return users;
     }
-
-
-    
-
-
-
-
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-
-    
     public static String getError(SQLException e) {
         String message = e.getMessage();
         int ix = message.indexOf('\n');

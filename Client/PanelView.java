@@ -63,3 +63,4 @@ public class PanelView extends JPanel {
         return chatWindow;
     }
 }
+

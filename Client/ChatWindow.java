@@ -3,7 +3,6 @@ package Client;
 import Server.Message;
 import Server.User;
 import Server.Chatroom;
-
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
@@ -54,11 +53,11 @@ public class ChatWindow extends JPanel {
         messagePanel.setMaximumSize(new Dimension(565, 80));
 
         JLabel senderLabel = new JLabel(senderInfo + ":");
+
         JTextArea textLabel = new JTextArea(msg.getText());
         textLabel.setEditable(false);
         textLabel.setLineWrap(true);
         textLabel.setWrapStyleWord(true);
-
         messagePanel.add(senderLabel, BorderLayout.NORTH);
         messagePanel.add(textLabel, BorderLayout.CENTER);
 
