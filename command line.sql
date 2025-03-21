@@ -1,1 +1,0 @@
-&"C:\Program Files\PostgreSQL\17\bin\psql.exe" -f "C:\Users\Per\Desktop\Labb Objektorienterade Applikationer\runsetup.sql" postgresql://postgres:postgres@127.0.0.1
