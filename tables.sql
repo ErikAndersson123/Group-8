@@ -1,0 +1,33 @@
+CREATE TABLE Users(
+	username TEXT NOT NULL,
+	password TEXT NOT NULL,
+	userID SERIAL NOT NULL,
+	PRIMARY KEY(userID),
+	UNIQUE (username)
+);
+
+CREATE TABLE Chatrooms(
+	roomID INT NOT NULL,
+	name TEXT NOT NULL,
+	PRIMARY KEY(roomID)
+);
+
+CREATE TABLE Messages(
+	messageID INT NOT NULL,
+	senderID INT NOT NULL,
+	roomID INT NOT NULL,
+	timestamp TEXT NOT NULL,
+	text TEXT NOT NULL,
+	image VARCHAR(255),
+	PRIMARY KEY(messageID, roomID),
+	--FOREIGN KEY(senderID) REFERENCES Users(userID) ON DELETE CASCADE
+	FOREIGN KEY(roomID) REFERENCES Chatrooms(roomID) ON DELETE CASCADE
+);
+
+CREATE TABLE ChatroomUsers(
+	userID INT NOT NULL,
+	roomID INT NOT NULL,
+	PRIMARY KEY(userID, roomID),
+	FOREIGN KEY(userID) REFERENCES Users(userID) ON DELETE CASCADE,
+	FOREIGN KEY(roomID) REFERENCES Chatrooms ON DELETE CASCADE
+)
